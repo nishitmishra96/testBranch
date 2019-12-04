@@ -1,0 +1,6 @@
+framework module LinkPreviewKit {
+  umbrella header "LinkPreviewKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

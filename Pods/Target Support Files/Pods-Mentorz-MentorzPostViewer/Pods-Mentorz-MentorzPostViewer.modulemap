@@ -1,0 +1,6 @@
+framework module Pods_Mentorz_MentorzPostViewer {
+  umbrella header "Pods-Mentorz-MentorzPostViewer-umbrella.h"
+
+  export *
+  module * { export * }
+}

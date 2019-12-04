@@ -1,0 +1,60 @@
+PODS:
+  - Alamofire (4.9.1)
+  - ExpandableLabel (0.5.2)
+  - HTMLReader (2.1.4)
+  - LinkPreviewKit (0.4.1):
+    - HTMLReader
+  - Moya (13.0.1):
+    - Moya/Core (= 13.0.1)
+  - Moya/Core (13.0.1):
+    - Alamofire (~> 4.1)
+    - Result (~> 4.1)
+  - ObjectMapper (3.5.1)
+  - PagingTableView (0.1.0)
+  - Result (4.1.0)
+  - SDWebImage (5.3.0):
+    - SDWebImage/Core (= 5.3.0)
+  - SDWebImage/Core (5.3.0)
+  - SVProgressHUD (2.2.5)
+  - TTTAttributedLabel (2.0.0)
+
+DEPENDENCIES:
+  - ExpandableLabel
+  - LinkPreviewKit
+  - Moya (~> 13.0)
+  - ObjectMapper (~> 3.4)
+  - PagingTableView
+  - SDWebImage (~> 5.0)
+  - SVProgressHUD
+  - TTTAttributedLabel
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - ExpandableLabel
+    - HTMLReader
+    - LinkPreviewKit
+    - Moya
+    - ObjectMapper
+    - PagingTableView
+    - Result
+    - SDWebImage
+    - SVProgressHUD
+    - TTTAttributedLabel
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  ExpandableLabel: c2fab6d27860c572d67134b30522a5917746171d
+  HTMLReader: 2fc5ccf6a041b7070d9b43b101034cba63d2ae2a
+  LinkPreviewKit: d16933bdb90ad21bde386285abcb9dc207fabfdb
+  Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
+  ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
+  PagingTableView: ba7869ff22f7cf3f8b2190b0314688d2cb0e46c4
+  Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  SDWebImage: f1afa74b86587c2c63f4e80dfd39b21e3c17b45b
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
+
+PODFILE CHECKSUM: 273291ee30f4ab50c6473500f74a9eff7de97fdc
+
+COCOAPODS: 1.8.4
