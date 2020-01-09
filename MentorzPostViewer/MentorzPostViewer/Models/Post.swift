@@ -14,6 +14,7 @@ class Post : NSObject, Mappable{
 
     var commentCount : Int?
     var content : PostContent?
+    var contents : [PostContent]?
     var lastName : String?
     var likeCount : Int?
     var liked : Bool?
@@ -36,6 +37,7 @@ class Post : NSObject, Mappable{
     {
         commentCount <- map["comment_count"]
         content <- map["content"]
+        contents <- map["contents"]
         lastName <- map["last_name"]
         likeCount <- map["like_count"]
         liked <- map["liked"]

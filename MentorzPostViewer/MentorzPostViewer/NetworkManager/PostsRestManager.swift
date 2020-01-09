@@ -84,8 +84,8 @@ class PostsRestManager:NSObject{
         }
     }
     
-    func userCommentedOnAPost(userId:String,postId:String,handler:@escaping ((Int)->())){
-        postProvider.request(.commentOnAPost(postId: postId, userId: userId, comment: "THIS IS A TEST COMMENT")) { (response) in
+    func userCommentedOnAPost(userId:String,postId:String,comment:String,handler:@escaping ((Int)->())){
+        postProvider.request(.commentOnAPost(postId: postId, userId: userId, comment: comment)) { (response) in
             switch response{
             case .success(let result):
                 print("comment status ",result.statusCode)
@@ -132,7 +132,6 @@ class PostsRestManager:NSObject{
     
     func updatePostViewCount(userId: String?, postId: String?,handler:@escaping ((Int?)->())){
         postProvider.request(.viewPost(userId: /userId, postId: /postId)) { (response) in
-//            print(response)
             switch response{
             case .success( let result):
                     handler(/result.statusCode)
@@ -142,8 +141,8 @@ class PostsRestManager:NSObject{
         }
     }
     
-    func getUserRating(userId:String,handler:@escaping ((Rating?,Int?)->())){
-        postProvider.request(.getUserRating(userId: userId)) { (response) in
+    func getUserRating(userId:String?,handler:@escaping ((Rating?,Int?)->())){
+        postProvider.request(.getUserRating(userId: /userId)) { (response) in
             switch response{
             case .success(let result):
                 do{
@@ -172,6 +171,82 @@ class PostsRestManager:NSObject{
                 }
             case .failure(let error):
                 handler(nil,error.response?.statusCode)
+            }
+        }
+    }
+    func getCommentsforPostId(userId: String?, postId: String?, pageNumber: Int,handler:@escaping ((CommentList?,Int?)->())){
+        postProvider.request(.getCommentList(userId: /userId, postId: /postId, pageNumber: pageNumber)) { (response) in
+            switch response{
+            case .success(let result):
+                do{
+                    let responseString = try result.mapString()
+                    let commentList = CommentList(JSONString: responseString)
+                    handler(commentList,result.statusCode)
+                }catch{
+                    handler(nil,HttpResponseCodes.SomethingWentWrong.rawValue)
+                }
+                case .failure(let error):
+                    handler(nil,error.response?.statusCode)
+            }
+        }
+    }
+    
+    func deleteCommentWith(userId:String,postId:String,commentId:String,handler:@escaping ((Int?)->())){
+        postProvider.request(.userDeletedComment(userId: userId, postId: postId, commentId: commentId)) { (response) in
+            switch response{
+            case .success(let result):
+                handler(result.statusCode)
+            case .failure(let error):
+                handler(error.response?.statusCode)
+            }
+        }
+    }
+    
+    func uploadSessionURI(name:String,mime:String,handler:@escaping ((String?,Int?)->())){
+        postProvider.request(.getUploadSessionURI(name: name, mime: mime)) { (response) in
+            switch response{
+            case .success(let result) :
+                do{
+                    let responseString = try result.mapString()
+                    let googleUrl = GoogleURL(JSONString: responseString)
+                    handler(/googleUrl?.value,result.statusCode)
+                }catch{
+                    handler("",HttpResponseCodes.SomethingWentWrong.rawValue)
+                }
+            case .failure(let error) :
+                handler("",error.response?.statusCode)
+            }
+        }
+    }
+    func getSignedURL(name:String,handler:@escaping ((String?,Int?)->())){
+        postProvider.request(.getSignedURL(contentName: name)) { (response) in
+            switch response{
+            case .success(let result) :
+                do{
+                    let responseString = try result.mapString()
+                    let googleUrl = GoogleURL(JSONString: responseString)
+                    handler(/googleUrl?.value,result.statusCode)
+                }catch{
+                    handler("",HttpResponseCodes.SomethingWentWrong.rawValue)
+                }
+            case .failure(let error) :
+                handler("",error.response?.statusCode)
+            }
+        }
+    }
+    func uploadPostToMentorzServer(userId:String,newPost:NewPost,handler:@escaping ((Post?,Int)->())){
+        postProvider.request(.uploadPost(userId: userId, newPost: newPost)) { (response) in
+            switch response{
+            case .success(let result) :
+                do{
+                    let responseString = try result.mapString()
+                    let post = Post(JSONString: responseString)
+                    handler(post!,result.statusCode)
+                }catch{
+                    handler(Post(),HttpResponseCodes.SomethingWentWrong.rawValue)
+                }
+            case .failure(let error) :
+                handler(Post(),/error.response?.statusCode)
             }
         }
     }

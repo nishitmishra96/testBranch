@@ -2,6 +2,7 @@ ${PODS_ROOT}/Target Support Files/Pods-Mentorz-abcd/Pods-Mentorz-abcd-frameworks
 ${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
 ${BUILT_PRODUCTS_DIR}/ExpandableLabel/ExpandableLabel.framework
 ${BUILT_PRODUCTS_DIR}/HTMLReader/HTMLReader.framework
+${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework
 ${BUILT_PRODUCTS_DIR}/LinkPreviewKit/LinkPreviewKit.framework
 ${BUILT_PRODUCTS_DIR}/Moya/Moya.framework
 ${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework

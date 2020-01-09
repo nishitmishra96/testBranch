@@ -10,7 +10,7 @@ import Foundation
 
 class URLGenerator:NSObject{
     
-    var isStaging = false
+    var isStaging = true
     
     var baseUrl : String{
         get{

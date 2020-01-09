@@ -22,6 +22,14 @@ extension String {
         let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font : font], context: nil)
         return ceil(boundingBox.width)
     }
+    func estimatedLabelHeight(text: String, width: CGFloat, font: UIFont) -> CGFloat {
+
+        let size = CGSize(width: width, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let attributes = [NSAttributedString.Key.font: font]
+        let rectangleHeight = String(text).boundingRect(with: size, options: options, attributes: attributes, context: nil).height
+        return rectangleHeight
+    }
     
     func encode(_ s: String) -> String {
         let data = s.data(using: .nonLossyASCII, allowLossyConversion: true)!

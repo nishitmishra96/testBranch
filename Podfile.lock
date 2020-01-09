@@ -2,6 +2,7 @@ PODS:
   - Alamofire (4.9.1)
   - ExpandableLabel (0.5.2)
   - HTMLReader (2.1.4)
+  - IQKeyboardManager (6.5.4)
   - LinkPreviewKit (0.4.1):
     - HTMLReader
   - Moya (13.0.1):
@@ -20,6 +21,7 @@ PODS:
 
 DEPENDENCIES:
   - ExpandableLabel
+  - IQKeyboardManager
   - LinkPreviewKit
   - Moya (~> 13.0)
   - ObjectMapper (~> 3.4)
@@ -33,6 +35,7 @@ SPEC REPOS:
     - Alamofire
     - ExpandableLabel
     - HTMLReader
+    - IQKeyboardManager
     - LinkPreviewKit
     - Moya
     - ObjectMapper
@@ -46,6 +49,7 @@ SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   ExpandableLabel: c2fab6d27860c572d67134b30522a5917746171d
   HTMLReader: 2fc5ccf6a041b7070d9b43b101034cba63d2ae2a
+  IQKeyboardManager: 72b359cd7e777e3a984cedbe05f8da45320cbb63
   LinkPreviewKit: d16933bdb90ad21bde386285abcb9dc207fabfdb
   Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
   ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
@@ -55,6 +59,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 273291ee30f4ab50c6473500f74a9eff7de97fdc
+PODFILE CHECKSUM: 4a5c38f64637a6d406098ec7b6c8633db7fc235d
 
 COCOAPODS: 1.8.4

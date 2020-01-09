@@ -9,7 +9,7 @@ import Foundation
 import ObjectMapper
 
 
-class CommentList : NSObject, Mappable{
+public class CommentList : NSObject, Mappable{
 
     var commentList : [Comment]?
     
@@ -21,7 +21,7 @@ class CommentList : NSObject, Mappable{
         
     }
     
-    func mapping(map: Map)
+    public func mapping(map: Map)
     {
         commentList <- map["comment_list"]
         

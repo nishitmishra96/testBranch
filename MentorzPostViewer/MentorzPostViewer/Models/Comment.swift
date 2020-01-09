@@ -10,17 +10,17 @@ import Foundation
 import ObjectMapper
 
 
-class Comment : NSObject, Mappable{
+public class Comment : NSObject, Mappable{
 
-    var comment : String?
+    @UTFEncodeAndDecode var comment : String?
     var commentId : Int?
     var commentTime : Int?
     var hresId : String?
     var lastName : String?
     var lresId : String?
-    var name : String?
+    @UTFEncodeAndDecode var name : String?
     var userId : Int?
-    var userName : String?
+    @UTFEncodeAndDecode var userName : String?
 
 
     override init() {
@@ -31,7 +31,7 @@ class Comment : NSObject, Mappable{
         
     }
 
-    func mapping(map: Map)
+    public func mapping(map: Map)
     {
         comment <- map["comment"]
         commentId <- map["comment_id"]

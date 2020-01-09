@@ -8,6 +8,7 @@
 
 import Foundation
 import Moya
+import ObjectMapper
 
 enum ApiCollection{
     case getMyBoardPost(userId:String,pageNumber:Int)
@@ -21,10 +22,20 @@ enum ApiCollection{
     case viewPost(userId:String,postId:String)
     case getUserRating(userId:String)
     case getProfileImage(userId:String)
+    case getCommentList(userId:String,postId:String,pageNumber:Int)
+    case userDeletedComment(userId:String,postId:String,commentId:String)
+    case getUploadSessionURI(name:String,mime:String)
+    case getSignedURL(contentName:String)
+    case uploadPost(userId:String,newPost:NewPost)
 }
 extension ApiCollection:TargetType{
     var headers: [String : String]? {
-        return ["Accept":"application/json","Content-Type":"application/json","user-agent":"hhhhh","oauth-token":"1575465070881:rOmUFUoCYYBpFWKP/DZAjH63QFisKnHrHB0zNvBGcBs=_611"]
+        switch self{
+        case .getUploadSessionURI(_,let mime):
+            return ["Accept":"application/json","Content-Type":"image/\(mime)","user-agent":"hhhhh"]
+        default: return ["Accept":"application/json","Content-Type":"application/json","user-agent":"hhhhh","oauth-token":"1578575230469:JE8yIWPlYTyyU+t4eSynsOvlfjmPDkig0cfdOcweGYs=_1126"]
+        }
+        
     }
     
     var baseURL: URL {
@@ -61,17 +72,29 @@ extension ApiCollection:TargetType{
             return "/mentorz/api/v3/user/\(userId)/rating"
         case .getProfileImage(let userId):
             return "/mentorz/api/v3/user/\(userId)/profile/image"
+        case .getCommentList(let userId,let postId,_):
+            return "/mentorz/api/v3/\(userId)/post/\(postId)/comments"
+        case .userDeletedComment(let userId,let postId,let commentId):
+            return "/mentorz/api/v3/\(userId)/post/\(postId)/comment/\(commentId)"
+        case .getUploadSessionURI(let name,_):
+            return "/mentorz/api/v3/user/signed/sessionuri/object/\(name)"
+        case .getSignedURL(let contentName):
+            return "/mentorz/api/v3/user/signed/geturl/object/\(contentName)"
+        case .uploadPost(let userId,_):
+            return "/mentorz/api/v3/\(userId)/post"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getPostByID,.getMyBoardPost,.getMyPosts,.getUserRating,.getPostByInterest,.getProfileImage:
+        case .getPostByID,.getMyBoardPost,.getMyPosts,.getUserRating,.getPostByInterest,.getProfileImage,.getCommentList,.getUploadSessionURI,.getSignedURL:
             return .get
         case .likeAPost,.unlikeAPost,.reportAbuse,.viewPost:
             return .post
-        case .commentOnAPost:
+        case .commentOnAPost,.uploadPost:
             return .put
+        case  .userDeletedComment:
+            return .delete
         }
     }
     
@@ -103,6 +126,17 @@ extension ApiCollection:TargetType{
             return .requestPlain
         case .getProfileImage(_):
             return .requestPlain
+        case .getCommentList(_, _,let pageNumber):
+            return .requestCompositeData(bodyData: Data(), urlParameters: ["pageNo":pageNumber])
+        case .userDeletedComment(_, _, _):
+            return .requestPlain
+        case .getUploadSessionURI(_, let mime):
+            return .requestPlain
+        case .getSignedURL(_):
+            return .requestPlain
+        case .uploadPost(_,let newPost):
+            let dict = newPost.toJSON()
+            return .requestCompositeParameters(bodyParameters: dict, bodyEncoding: JSONEncoding.default, urlParameters: [:])
         }
     }
     var validationType: ValidationType {

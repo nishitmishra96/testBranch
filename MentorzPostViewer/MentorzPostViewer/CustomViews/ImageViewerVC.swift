@@ -40,7 +40,11 @@ open class ImageViewerVC: UIViewController {
     
     func loadImage(url: URL?){
         self.image.sd_setImage(with: url) { (image, error, cache, url) in
-            self.imageView.image = image
+            if let _ = image{
+                self.imageView.image = image
+            }else{
+                self.imageView.image = UIImage(named:"loading_data_logo")
+            }
             self.scrollView.contentSize = CGSize.init(width: self.image.frame.width, height: self.image.frame.height)
         }
     }
@@ -73,6 +77,4 @@ extension ImageViewerVC:UIScrollViewDelegate{
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageView
     }
-    
-    
 }

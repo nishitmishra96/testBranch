@@ -17,9 +17,7 @@ class BaseTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegat
     var delegate : DataForBoard?
     var userId:String?
     var completePosts = [CompletePost]()
-    var reuseIdentifier : String?
-    
-    
+
     init(userId:String) {
         self.userId = userId
 //        postList.posts = []
@@ -28,7 +26,7 @@ class BaseTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegat
     
     func getPostsWith(for tableView:PagingTableView? = nil, pageNumber:Int){
     }
-    func getCommentForPost(){
+    func getCommentForPost(tableView: PagingTableView, to page: Int){
         
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -59,10 +57,6 @@ class BaseTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegat
         }
     }
     
-    func userCommentedOn(postId:Int){
-        PostsRestManager.shared.userCommentedOnAPost(userId: self.userId ?? "\(0)", postId: "\(postId)") { (statusCode) in
-        }
-    }
     func getObjectOfCompletePostWith(post: Post)->CompletePost?{
         let requiredCompletePost = self.completePosts.filter { (completePost) -> Bool in
             return post.postId == completePost.post?.postId

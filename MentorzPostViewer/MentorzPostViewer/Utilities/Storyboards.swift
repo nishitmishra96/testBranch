@@ -12,7 +12,7 @@ enum Storyboard: String {
     //    Normal App StoryBoards
     case home = "home"
     var instance: UIStoryboard {
-        return UIStoryboard(name: rawValue, bundle: nil)
+        return UIStoryboard(name: rawValue, bundle: Bundle(identifier: "com.craterzone.MentorzPostViewer"))
     }
     
     func instanceOf<T: UIViewController>(viewController: T.Type) -> T? {

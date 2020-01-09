@@ -33,20 +33,41 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var thirdStar: UIImageView!
     @IBOutlet weak var fourthStar: UIImageView!
     @IBOutlet weak var fifthStar: UIImageView!
+    @IBOutlet weak var readMore : UIButton!
+    @IBOutlet weak var containerView:UIView!
     var images : [UIImageView] = []
+    @IBOutlet weak var userActivitiesStackView: UIStackView!
     
+    @IBOutlet weak var stackViewToImage: NSLayoutConstraint!
+    @IBOutlet weak var stackViewToReadMore: NSLayoutConstraint!
     var didTapOnImageView:((_ imageurl:String)->())?
     var didTapOnVideoPlay:((_ videoUrl:String)->())?
     var delegate : UserActivities?
     let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
-    weak var post:Post?
+    weak var completePost:CompletePost?
     var url : URL?
-    
+    var userId : String?
+    var readMorePressed = false
+    @IBAction func readMorePressed(_ sender: Any) {
+        if !(self.readMorePressed){
+            self.postText.numberOfLines = 0
+            self.postText.lineBreakMode = .byWordWrapping
+//            self.postText.text = self.completePost?.post?.content?.descriptionField
+            self.readMore.setTitle("Read Less", for: .normal)
+            delegate?.userPressedReadMore(post:self.completePost)
+        }else{
+            self.postText.numberOfLines = 2
+            self.postText.lineBreakMode = .byTruncatingTail
+            self.readMore.setTitle("Read More", for: .normal)
+            delegate?.userPressedReadLess(post:self.completePost)
+        }
+        self.layoutIfNeeded()
+        self.readMorePressed = !self.readMorePressed
+    }
     
     override open func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-//        self.postText.delegate = self
         self.postText.enabledTextCheckingTypes = NSTextCheckingResult.CheckingType.link.rawValue
         self.abusePostImage.layer.borderColor = UIColor.gray.cgColor
         self.abusePostImage.layer.borderWidth = 1.0
@@ -56,79 +77,88 @@ class PostTableViewCell: UITableViewCell {
         images.append(thirdStar)
         images.append(fourthStar)
         images.append(fifthStar)
+        self.postText.delegate = self
         profileImage.layer.cornerRadius = 25
         self.mainPostImage.image = UIImage(named:"loading_data_logo")
+        containerView.layer.cornerRadius = 25
+        userActivitiesStackView.layer.cornerRadius = 25
+        self.postText.numberOfLines = 2
     }
     
+    override func prepareForReuse() {
+        profileImage.image = nil
+        timeOfPost.text = ""
+        postText.text = nil
+        name.text = ""
+        mainPostImage.image = nil
+        likeCount.text = ""
+        commentCount.text = ""
+        shareCount.text = ""
+        viewCount.text = ""
+        self.mainPostImage.image = nil
+        self.profileImage.image = nil
+        for rating in 0..<5{
+           self.images[rating].image = UIImage(named: "unselected_rate")
+        }
+    }
     func setData(cellPost:CompletePost?){
-        guard let completePost = cellPost?.post else{ return }
-        self.post = completePost
+        guard let newPost = cellPost else { return }
+        self.completePost = newPost
         self.setProfieImage(completePost: cellPost!)
         self.setRatingwith(completePost:cellPost!)
-//        self.postText.setLessLinkWith(lessLink: "Read Less", attributes: [NSAttributedString.Key.foregroundColor:UIColor.gray], position: .left)
-//        self.layoutIfNeeded()
-//        self.postText.shouldCollapse = true
-//        var postxt = NSString(string: post?.content?.descriptionField)
-//        let descText = "\((post?.content?.descriptionField?.removingPercentEncoding as NSString?)?.substring(to: 20) ?? "")... \(NSLocalizedString("read more", comment: ""))"
-
-        self.postText.text = post?.content?.descriptionField
-//        self.postText.collapsedAttributedLink = NSAttributedString(string: "Read More", attributes: [NSAttributedString.Key.font: UIFont(name: "MyriadPro-Regular", size: 12.0),NSAttributedString.Key.foregroundColor:UIColor.gray]);
-//        self.postText.ellipsis = NSAttributedString(string: "...")
-//        self.postText.collapsed = true
-        self.name.text = post?.name?.removingPercentEncoding
-        
-        if let likeCount = post?.likeCount{
+        self.postText.text = completePost?.post?.content?.descriptionField
+        self.name.text = completePost?.post?.name?.removingPercentEncoding
+        self.readMore.setTitle("Read More", for: .normal)
+        if let likeCount = completePost?.post?.likeCount{
             self.likeCount.text = (likeCount > 1) ? "\(likeCount) likes":"\(likeCount) like"
         }
-        if post?.liked ?? false{
+        if completePost?.post?.liked ?? false{
             self.likeButton.setImage(UIImage(named: "selected_like", in: Bundle.init(identifier: "com.craterzone.MentorzPostViewer"), compatibleWith: UITraitCollection(displayScale: 1.0)), for: .normal)
-
         }else{
             self.likeButton.setImage(UIImage(named: "like", in: Bundle.init(identifier: "com.craterzone.MentorzPostViewer"), compatibleWith: UITraitCollection(displayScale: 1.0)), for: .normal)
         }
-        self.commentCount.text = (/post?.commentCount > 1) ? "\(/post?.commentCount) comments " : "\(/post?.commentCount) comment"
-        self.viewCount.text = (/post?.viewCount > 1) ? "\(/post?.viewCount) views " : "\(/post?.viewCount) view"
-        self.shareCount.text = (/post?.shareCount > 1) ? "\(/post?.shareCount) shares":"\(/post?.shareCount) share"
-        self.mainPostImage?.sd_setImage(with: URL(string: /post?.content?.lresId)){(image,error,cache,url) in
-            self.mainPostImage.image = image
+        self.commentCount.text = (/completePost?.post?.commentCount > 1) ? "\(/completePost?.post?.commentCount) comments " : "\(/completePost?.post?.commentCount) comment"
+        self.viewCount.text = (/completePost?.post?.viewCount > 1) ? "\(/completePost?.post?.viewCount) views " : "\(/completePost?.post?.viewCount) view"
+        self.shareCount.text = (/completePost?.post?.shareCount > 1) ? "\(/completePost?.post?.shareCount) shares":"\(/completePost?.post?.shareCount) share"
+        if completePost?.post?.content?.lresId != ""{
+            self.mainPostImage.sd_setImage(with: URL(string: /completePost?.post?.content?.lresId), placeholderImage: UIImage(named:"loading_data_logo"))
+        }else{
+            
         }
 
-        if self.post?.content?.mediaType == "IMAGE"{
+        if self.completePost?.post?.content?.mediaType == "IMAGE"{
             self.playButton.setImage(nil, for: .normal)
-        }else if self.post?.content?.mediaType == "VIDEO"{
+        }else if self.completePost?.post?.content?.mediaType == "VIDEO"{
             self.playButton.setImage(UIImage(named:"play"), for: .normal)
-        }else if self.post?.content?.mediaType == "TEXT"{
-
+        }else if self.completePost?.post?.content?.mediaType == "TEXT"{
             if let firstUrl = self.getFirstUrl(){
-                    self.url = firstUrl.url
                     LKLinkPreviewReader.linkPreview(from: firstUrl.url) { (preview,error) in
                         if preview != nil{
                         if ((preview?.first as! LKLinkPreview).imageURL != nil){
-                            self.mainPostImage.sd_setImage(with: (preview?.first as! LKLinkPreview).imageURL) { (image, error, cache, url) in
-                                            self.mainPostImage.image = image
-                            }
+                            self.url = (preview?.first as! LKLinkPreview).imageURL
+                            self.mainPostImage.sd_setImage(with: (preview?.first as! LKLinkPreview).imageURL, placeholderImage: UIImage(named:"loading_data_logo"))
                         }
                         }else{
-    //                        self.playButton.isHidden = true
-    //                        self.mainPostImage.isHidden = true
-//                            self.mainPostImage.image = UIImage(named:"loading_data_logo")
-
+                            self.mainPostImage.image = UIImage(named:"loading_data_logo")
                         }
                     }
-                }
+            }else{
+                self.mainPostImage.image = UIImage(named:"loading_data_logo")
+
+            }
         }
-        self.timeOfPost.text = dateTimeUtil.getTimeDutation(forPost:"\(/post?.shareTime)")
+        self.timeOfPost.text = dateTimeUtil.getTimeDutation(forPost:"\(/completePost?.post?.shareTime)")
+        if postText.isTruncated{
+            self.readMore.isHidden = true
+        }else{
+            self.readMore.isHidden = false
+        }
     }
+    
     func setProfieImage(completePost:CompletePost){
         completePost.getProfileImage { (statusCode) in
             if statusCode == HttpResponseCodes.success.rawValue{
-                self.profileImage?.sd_setImage(with: URL(string: /completePost.profileImage?.hresId)) { (image, error, cache, url) in
-                    if let profileImage = image{
-                        self.profileImage.image = image
-                    }else{
-                        self.profileImage.image = UIImage(named:"default_avt_square")
-                    }
-                }
+                self.profileImage.sd_setImage(with: URL(string: /completePost.profileImage?.hresId), placeholderImage: UIImage(named:"default_avt_square"))
             }else{
                 self.profileImage.image = UIImage(named:"default_avt_square")
             }
@@ -138,7 +168,7 @@ class PostTableViewCell: UITableViewCell {
     func getFirstUrl()-> NSTextCheckingResult?{
         do{
             let dataDetector = try NSDataDetector.init(types: NSTextCheckingResult.CheckingType.link.rawValue)
-            let firstMatch = dataDetector.firstMatch(in: /post?.content?.descriptionField, options: [], range: NSRange(location: 0, length: /post?.content!.descriptionField?.utf16.count))
+            let firstMatch = dataDetector.firstMatch(in: /completePost?.post?.content?.descriptionField, options: [], range: NSRange(location: 0, length: /completePost?.post?.content!.descriptionField?.utf16.count))
             return firstMatch
         }
         catch {
@@ -156,10 +186,10 @@ class PostTableViewCell: UITableViewCell {
                 let rate = /rating.rating! - Double(Int(/rating.rating))
 
                 if (rate > RATING_ROUNDUP_MIN_VALUE && rate < RATING_ROUNDUP_MAX_VALUE){
-                    self.images[Int(/rating.rating) + 1].image = UIImage(named: "selected_halfRate")
+                    self.images[Int(/rating.rating)].image = UIImage(named: "selected_halfRate")
                 }
                 if rate > RATING_ROUNDUP_MAX_VALUE{
-                    self.images[Int(/rating.rating) + 1].image = UIImage(named: "selected_rate")
+                    self.images[Int(/rating.rating)].image = UIImage(named: "selected_rate")
                 }
                 }
             }else{
@@ -174,10 +204,10 @@ class PostTableViewCell: UITableViewCell {
         let alertController = UIAlertController.init(title: "Report Abuse?", message: nil, preferredStyle: .actionSheet)
 
         let inappropriateContent = UIAlertAction(title: "Inappropriate Content", style: .destructive) { (action) in
-            self.delegate?.userReportedAPostWith(post: self.post!, type: "InAppropriateContent")
+            self.delegate?.userReportedAPostWith(post: (self.completePost?.post)!, type: "InAppropriateContent")
         }
         let spam = UIAlertAction(title: "Spam", style: .destructive) { (action) in
-            self.delegate?.userReportedAPostWith(post: self.post!, type: "Spam")
+            self.delegate?.userReportedAPostWith(post: (self.completePost?.post)!, type: "Spam")
         }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(inappropriateContent)
@@ -186,31 +216,21 @@ class PostTableViewCell: UITableViewCell {
         UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     @IBAction func didTapOnImage(_ sender: UIButton) {
-        if self.post?.content?.mediaType == "IMAGE"{
-//            self.didTapOnImageView?(/self.post?.content?.hresId)
-            let storyboard = UIStoryboard(name : "home", bundle:  Bundle.init(identifier: "com.craterzone.MentorzPostViewer"))
-            if #available(iOS 13.0, *) {
-                let imageViewer = storyboard.instantiateViewController(identifier: "ImageViewerVC") as! ImageViewerVC
-                imageViewer.url = URL(string: post?.content?.hresId ?? "")
-                imageViewer.modalPresentationStyle = .fullScreen
-                UIApplication.shared.keyWindow?.rootViewController?.present(imageViewer, animated: true, completion: nil)
-            } else {
-                // Fallback on earlier versions
-                let storyboard = UIStoryboard(name : "home", bundle:  Bundle.init(identifier: "com.craterzone.MentorzPostViewer"))
-                if #available(iOS 13.0, *) {
-                    let imageViewer = storyboard.instantiateViewController(identifier: "ImageViewerVC") as! ImageViewerVC
-                    imageViewer.url = URL(string: post?.content?.hresId ?? "")
-                    imageViewer.modalPresentationStyle = .fullScreen
-                    UIApplication.shared.keyWindow?.rootViewController?.present(imageViewer, animated: true, completion: nil)
-                } else {
-                    // Fallback on earlier versions
-                }
+        if self.completePost?.post?.content?.mediaType == "IMAGE"{
+            let imageViewer = Storyboard.home.instanceOf(viewController: ImageViewerVC.self)!
+            imageViewer.url = URL(string: completePost?.post?.content?.hresId ?? "")
+            imageViewer.modalPresentationStyle = .fullScreen
+            UIApplication.shared.keyWindow?.rootViewController?.present(imageViewer, animated: true, completion: nil)
+
+        }else if self.completePost?.post?.content?.mediaType == "TEXT" {
+            let imageViewer = Storyboard.home.instanceOf(viewController: ImageViewerVC.self)!
+            if let _ = self.url{
+                imageViewer.url = self.url
             }
-        }else if self.post?.content?.mediaType == "TEXT" {
-            
-        }else if self.post?.content?.mediaType == "VIDEO"{
-//            self.didTapOnVideoPlay?(/self.post?.content?.hresId)
-            let videoURL = URL(string: post?.content?.hresId ?? "")
+            imageViewer.modalPresentationStyle = .fullScreen
+            UIApplication.shared.keyWindow?.rootViewController?.present(imageViewer, animated: true, completion: nil)
+        }else if self.completePost?.post?.content?.mediaType == "VIDEO"{
+            let videoURL = URL(string: completePost?.post?.content?.hresId ?? "")
             let player = AVPlayer(url: videoURL!)
             let playerViewController = AVPlayerViewController()
             playerViewController.player = player
@@ -222,10 +242,10 @@ class PostTableViewCell: UITableViewCell {
     
     @IBAction func likeButtonPressed(_ sender: Any) {
         notificationFeedbackGenerator.prepare()
-            if post?.liked ?? false{
+            if completePost?.post?.liked ?? false{
                 self.clickedLikeWhenAlreadyLiked()
                 notificationFeedbackGenerator.notificationOccurred(.success)
-                delegate?.userUnLiked(postId: self.post?.postId ?? 0){ (statusCode) in
+                delegate?.userUnLiked(postId: /self.completePost?.post?.postId){ (statusCode) in
                     if statusCode == 204{
                         
                     }else{
@@ -236,7 +256,7 @@ class PostTableViewCell: UITableViewCell {
             }else{
                 self.clickedLikeWhenAleadyDisliked()
                 notificationFeedbackGenerator.notificationOccurred(.success)
-                delegate?.userLiked(postId: post?.postId ?? 0){ (statusCode) in
+                delegate?.userLiked(postId: /completePost?.post?.postId){ (statusCode) in
                     if statusCode == 204{
                         
                     }else{
@@ -249,32 +269,48 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func clickedLikeWhenAlreadyLiked(){
-        if (post?.likeCount)! > 0{
-            post?.likeCount! -= 1
+        if (completePost?.post?.likeCount)! > 0{
+            completePost?.post?.likeCount! -= 1
         }
-        if let likeCount = post?.likeCount{
+        if let likeCount = completePost?.post?.likeCount{
             self.likeCount.text = (likeCount > 1) ? "\(likeCount) likes":"\(likeCount) like"
         }
-        post?.liked = false
+        completePost?.post?.liked = false
         self.likeButton.setImage(UIImage(named: "like", in: Bundle.init(identifier: "com.craterzone.MentorzPostViewer"), compatibleWith: UITraitCollection(displayScale: 1.0)), for: .normal)
     }
     
     func clickedLikeWhenAleadyDisliked(){
-        post?.likeCount! += 1
-        if let likeCount = post?.likeCount{
+        completePost?.post?.likeCount! += 1
+        if let likeCount = completePost?.post?.likeCount{
            self.likeCount.text = (likeCount > 1) ? "\(likeCount) likes":"\(likeCount) like"
         }
-        post?.liked = true
+        completePost?.post?.liked = true
            self.likeButton.setImage(UIImage(named: "selected_like", in: Bundle.init(identifier: "com.craterzone.MentorzPostViewer"), compatibleWith: UITraitCollection(displayScale: 1.0)), for: .normal)
     }
     
     @IBAction func commentButtonPressed(_ sender: Any) {
-        var commentVC = Storyboard.home.instanceOf(viewController: CommentViewVC.self)!
-        UIApplication.shared.keyWindow?.rootViewController?.present(commentVC, animated: true, completion: nil)
-        
+        let commentVC = Storyboard.home.instanceOf(viewController: CommentViewVC.self)!
+        commentVC.modalPresentationStyle = .fullScreen
+        UIApplication.shared.keyWindow?.rootViewController?.present(commentVC, animated: true, completion:{
+            commentVC.getCommentList(userId: self.userId, postId: "\(/self.completePost?.post?.postId)",comments: self.completePost?.comments)
+        })
     }
     
+    @IBAction func profilePictureTapped(_ sender: Any) {
+        
+    }
     @IBAction func shareButtonPressed(_ sender: Any) {
+        let url : NSURL?
+        let caption:NSString = NSString(string: /self.completePost?.post?.content?.descriptionField)
+        if self.completePost?.post?.content?.mediaType != "TEXT"{
+            url = NSURL(string: /self.completePost?.post?.content?.hresId)!
+        }else{
+            url = self.url as NSURL?
+        }
+        let objectstoshare = [caption,url]
+        let controller = UIActivityViewController(activityItems: objectstoshare, applicationActivities: nil)
+        controller.setValue(caption, forKey: "Subject")
+        UIApplication.shared.keyWindow?.rootViewController?.present(controller, animated: true, completion: nil)
     }
     
     func sharePost(){
@@ -283,8 +319,14 @@ class PostTableViewCell: UITableViewCell {
         let objectstoshare = [caption,url]
         let controller = UIActivityViewController(activityItems: objectstoshare, applicationActivities: nil)
         controller.setValue(caption, forKey: "Subject")
-        // Exclude all activities except AirDrop.
         UIApplication.shared.keyWindow?.rootViewController?.present(controller, animated: true, completion: nil)
     }
 }
 
+extension PostTableViewCell:TTTAttributedLabelDelegate{
+    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
+        if UIApplication.shared.canOpenURL(url){
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+}
