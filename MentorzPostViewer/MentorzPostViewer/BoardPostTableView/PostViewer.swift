@@ -14,7 +14,7 @@ import Alamofire
 import Photos
 import MobileCoreServices
 open class PostViewer:BaseTableView {
-    var dataSourceTableView : BaseTableViewDataSource?
+    var dataSourceTableView : TableViewDataSource?
     var imagePicker : GalleryImagePicker?
     var currentlyPresentedVC:UIViewController?
     var localPost : LocalPost?
@@ -84,6 +84,19 @@ extension PostViewer:DataForBoard{
 }
 
 extension PostViewer: UserActivities{
+    func reloadTableView(forPost: CompletePost?) {
+        if let post = forPost?.post{
+            let requiredCompletePost = self.dataSourceTableView?.getObjectOfCompletePostWith(post: post)
+             if let completePost = requiredCompletePost{
+                 let index = self.dataSourceTableView?.completePosts.firstIndex(of: completePost)
+                 let indexPath = IndexPath(row: /index, section: 0)
+                 self.beginUpdates()
+                 self.reloadRows(at: [indexPath], with: .automatic)
+                 self.endUpdates()
+             }
+        }
+    }
+    
     func userPressedReadMore(post:CompletePost?) {
         if let post = post?.post{
             let requiredCompletePost = self.dataSourceTableView?.getObjectOfCompletePostWith(post: post)
@@ -315,5 +328,13 @@ extension PostViewer:UploadPostDelegate{
 extension PostViewer : PostUploadCancelled{
     func uploadCancelled() {
         self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+    }
+}
+
+extension PostViewer : UISearchBarDelegate{
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
+        (self.dataSourceTableView as? TableViewDataSource)?.filterPostString = searchBar.text
+        reloadTableView()
     }
 }

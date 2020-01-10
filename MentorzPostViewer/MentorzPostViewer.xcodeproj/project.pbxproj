@@ -45,6 +45,10 @@
 		94B2E7B2237AEDF800FF797B /* MentorzPostViewerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2E7B1237AEDF800FF797B /* MentorzPostViewerTests.swift */; };
 		94B2E7B4237AEDF800FF797B /* MentorzPostViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = 94B2E7A6237AEDF800FF797B /* MentorzPostViewer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		94B2E7FF237AEEAF00FF797B /* PostViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2E7FE237AEEAF00FF797B /* PostViewer.swift */; };
+		94B517DF23C8430A0096E152 /* MentorzPostViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B517DE23C8430A0096E152 /* MentorzPostViewer.swift */; };
+		94B517E123C870220096E152 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B517E023C870220096E152 /* Fonts.swift */; };
+		94B517E323C87DEB0096E152 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B517E223C87DEB0096E152 /* Colors.swift */; };
+		94B517E523C8849B0096E152 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 94B517E423C8849B0096E152 /* Fonts */; };
 		94C8FF0223900198004B702D /* InterestTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8FF0123900198004B702D /* InterestTableView.swift */; };
 		94C8FF04239001CC004B702D /* InterestTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8FF03239001CC004B702D /* InterestTableViewDataSource.swift */; };
 		94DF4446238CE8AD00A896E1 /* PostList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF4445238CE8AD00A896E1 /* PostList.swift */; };
@@ -114,6 +118,10 @@
 		94B2E7B1237AEDF800FF797B /* MentorzPostViewerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentorzPostViewerTests.swift; sourceTree = "<group>"; };
 		94B2E7B3237AEDF800FF797B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94B2E7FE237AEEAF00FF797B /* PostViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewer.swift; sourceTree = "<group>"; };
+		94B517DE23C8430A0096E152 /* MentorzPostViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentorzPostViewer.swift; sourceTree = "<group>"; };
+		94B517E023C870220096E152 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		94B517E223C87DEB0096E152 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		94B517E423C8849B0096E152 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		94C8FF0123900198004B702D /* InterestTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestTableView.swift; sourceTree = "<group>"; };
 		94C8FF03239001CC004B702D /* InterestTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestTableViewDataSource.swift; sourceTree = "<group>"; };
 		94DF4445238CE8AD00A896E1 /* PostList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostList.swift; sourceTree = "<group>"; };
@@ -204,6 +212,8 @@
 				942F367423977BD4006B5350 /* HttpResponseCodes.swift */,
 				942F36892397EEE7006B5350 /* Storyboards.swift */,
 				94505A1F23C497E2009D8CE3 /* MulticastDelegate.swift */,
+				94B517E023C870220096E152 /* Fonts.swift */,
+				94B517E223C87DEB0096E152 /* Colors.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -257,6 +267,7 @@
 		94B2E7A5237AEDF800FF797B /* MentorzPostViewer */ = {
 			isa = PBXGroup;
 			children = (
+				94B517E423C8849B0096E152 /* Fonts */,
 				942F36862397ED12006B5350 /* CommentTableView */,
 				94F6439E2393004F005E7976 /* Assets.xcassets */,
 				94F643AA2393FF90005E7976 /* Prefix.swift */,
@@ -272,6 +283,7 @@
 				94B2E7A6237AEDF800FF797B /* MentorzPostViewer.h */,
 				94B2E7A7237AEDF800FF797B /* Info.plist */,
 				949BF4C123AA49FF00F4E621 /* GalleryImagePicker.swift */,
+				94B517DE23C8430A0096E152 /* MentorzPostViewer.swift */,
 			);
 			path = MentorzPostViewer;
 			sourceTree = "<group>";
@@ -432,6 +444,7 @@
 				945B183E23C448D80051A97B /* UploadProgressCell.xib in Resources */,
 				94F6439F23930050005E7976 /* Assets.xcassets in Resources */,
 				94EFE7A62394E2FF003DFE8A /* home.storyboard in Resources */,
+				94B517E523C8849B0096E152 /* Fonts in Resources */,
 				942F367F2397D6C5006B5350 /* CommentViewCell.xib in Resources */,
 				94592F7E2382BD5300B42A50 /* PostTableViewCell.xib in Resources */,
 			);
@@ -481,6 +494,7 @@
 				942F36812397DF55006B5350 /* CommentViewVC.swift in Sources */,
 				945014BD23ACB4AC0078491A /* ContentToUpload.swift in Sources */,
 				94B2E7FF237AEEAF00FF797B /* PostViewer.swift in Sources */,
+				94B517DF23C8430A0096E152 /* MentorzPostViewer.swift in Sources */,
 				94A19205237D6C06001CB7A8 /* PostTableViewCell.swift in Sources */,
 				940AB3D1238FA2ED00EBADC4 /* ProfilePostViewerDataSource.swift in Sources */,
 				94C8FF0223900198004B702D /* InterestTableView.swift in Sources */,
@@ -488,9 +502,11 @@
 				942F368A2397EEE7006B5350 /* Storyboards.swift in Sources */,
 				942F367E2397D6C5006B5350 /* CommentViewCell.swift in Sources */,
 				945B188023C467C90051A97B /* UploadTaskManager.swift in Sources */,
+				94B517E323C87DEB0096E152 /* Colors.swift in Sources */,
 				94DF444A238CEACD00A896E1 /* Content.swift in Sources */,
 				9449B97823959DA800788029 /* Rating.swift in Sources */,
 				942F367523977BD4006B5350 /* HttpResponseCodes.swift in Sources */,
+				94B517E123C870220096E152 /* Fonts.swift in Sources */,
 				94DF4453238D3AA000A896E1 /* Protocols.swift in Sources */,
 				94DF4451238CF1B400A896E1 /* URLGenerator.swift in Sources */,
 				949BF4C423AA5F5C00F4E621 /* GoogleURL.swift in Sources */,

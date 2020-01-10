@@ -18,7 +18,6 @@ class InterestTableViewDataSource:TableViewDataSource{
        }
        PostsRestManager.shared.getPostOnUserInterest(userId: userId, interestString: queryparams, pageNumber: pageNumber) { (postList, statusCode) -> (Void) in
            if let postList = postList{
-//               self.postList = postList
             for post in postList.posts ?? []{
                   self.completePosts.append(CompletePost(post:post))
               }

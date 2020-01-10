@@ -12,10 +12,12 @@ import PagingTableView
 open class BaseTableView: PagingTableView {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        setUp()
     }
 
     override public init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
+        setUp()
     }
 
     open override func awakeFromNib() {

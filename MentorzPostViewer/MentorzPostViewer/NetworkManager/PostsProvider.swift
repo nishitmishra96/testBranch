@@ -33,7 +33,7 @@ extension ApiCollection:TargetType{
         switch self{
         case .getUploadSessionURI(_,let mime):
             return ["Accept":"application/json","Content-Type":"image/\(mime)","user-agent":"hhhhh"]
-        default: return ["Accept":"application/json","Content-Type":"application/json","user-agent":"hhhhh","oauth-token":"1578575230469:JE8yIWPlYTyyU+t4eSynsOvlfjmPDkig0cfdOcweGYs=_1126"]
+        default: return ["Accept":"application/json","Content-Type":"application/json","user-agent":"hhhhh","oauth-token":MentorzPostViewer.shared.dataSource?.authToken() ?? ""]
         }
         
     }

@@ -17,7 +17,7 @@ class BaseTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegat
     var delegate : DataForBoard?
     var userId:String?
     var completePosts = [CompletePost]()
-
+    var completePostsWithFilter = [CompletePost]()
     init(userId:String) {
         self.userId = userId
 //        postList.posts = []
@@ -31,7 +31,7 @@ class BaseTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegat
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        return postList.posts?.count ?? 0
-        return /completePosts.count
+        return /completePostsWithFilter.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,7 +58,7 @@ class BaseTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegat
     }
     
     func getObjectOfCompletePostWith(post: Post)->CompletePost?{
-        let requiredCompletePost = self.completePosts.filter { (completePost) -> Bool in
+        let requiredCompletePost = self.completePostsWithFilter.filter { (completePost) -> Bool in
             return post.postId == completePost.post?.postId
         }
         return requiredCompletePost.first

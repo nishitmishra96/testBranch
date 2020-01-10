@@ -11,6 +11,7 @@ import Moya
 import ObjectMapper
 
 class PostsRestManager:NSObject{
+    let cache = NSCache<NSString, ProfileImage>()
     static var shared = PostsRestManager()
     private var postProvider = MoyaProvider<ApiCollection>()
     func getPosts(userId:String,pageNumber:Int,handler: @escaping ((PostList?,Int)->(Void))){
@@ -159,12 +160,20 @@ class PostsRestManager:NSObject{
     }
     
     func getProfileImageWith(userId:String,handler:@escaping ((ProfileImage?,Int?)->())){
+        if let profileImage = self.cache.object(forKey: userId as NSString){
+            print("Image from cache")
+            handler(profileImage, HttpResponseCodes.success.rawValue)
+            return
+        }
         postProvider.request(.getProfileImage(userId: userId)) { (response) in
         switch response{
             case .success(let result):
                 do{
                     let responseString = try result.mapString()
                     let rating = ProfileImage(JSONString: responseString)
+                    if let ratingObj = rating{
+                        self.cache.setObject(ratingObj, forKey: userId as NSString)
+                    }
                     handler(rating,result.statusCode)
                 }catch{
                     handler(nil,HttpResponseCodes.SomethingWentWrong.rawValue)

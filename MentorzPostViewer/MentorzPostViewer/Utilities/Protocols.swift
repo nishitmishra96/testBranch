@@ -23,6 +23,7 @@ protocol UserActivities{
     func userReportedAPostWith(post: Post,type:String)
     func userPressedReadMore(post:CompletePost?)
     func userPressedReadLess(post:CompletePost?)
+    func reloadTableView(forPost:CompletePost?)
 }
 
 
