@@ -16,8 +16,8 @@ protocol DataForBoard {
 
 
 protocol UserActivities{
-    func userLiked(postId:Int,handler:@escaping ((Int)->()))
-    func userUnLiked(postId:Int,handler:@escaping ((Int)->()))
+    func userLiked(postId:Int,handler:@escaping ((Bool)->()))
+    func userUnLiked(postId:Int,handler:@escaping ((Bool)->()))
     func userCommented(postId:Int)
     func userDeletedComment(completeComment:CompleteComment)
     func userReportedAPostWith(post: Post,type:String)

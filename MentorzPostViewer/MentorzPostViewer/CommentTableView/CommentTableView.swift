@@ -105,46 +105,13 @@ extension CommentTableView: UserActivities{
     func userReportedAPostWith(post:Post, type: String) {
     }
     
-    func userUnLiked(postId: Int, handler: @escaping ((Int) -> ())) {
+    func userUnLiked(postId: Int, handler: @escaping ((Bool) -> ())) {
     }
     
-    func userLiked(postId: Int, handler: @escaping ((Int) -> ())) {
+    func userLiked(postId: Int, handler: @escaping ((Bool) -> ())) {
     }
     
     func userCommented(postId: Int) {
 //        self.userCommented(postId: postId)
     }
-}
-
-
-
-extension CommentTableView : ExpandableLabelDelegate{
-    public func willExpandLabel(_ label: ExpandableLabel) {
-          self.beginUpdates()
-      }
-      
-    public func didExpandLabel(_ label: ExpandableLabel) {
-          let point = label.convert(CGPoint.zero, to: self)
-          if let indexPath = self.indexPathForRow(at: point) as IndexPath? {
-              DispatchQueue.main.async { [weak self] in
-                  self?.scrollToRow(at: indexPath, at: .top, animated: true)
-              }
-          }
-          self.endUpdates()
-      }
-      
-    public func willCollapseLabel(_ label: ExpandableLabel) {
-          self.beginUpdates()
-      }
-      
-    public func didCollapseLabel(_ label: ExpandableLabel) {
-          let point = label.convert(CGPoint.zero, to: self)
-          if let indexPath = self.indexPathForRow(at: point) as IndexPath? {
-              DispatchQueue.main.async { [weak self] in
-                  self?.scrollToRow(at: indexPath, at: .top, animated: true)
-              }
-          }
-          self.endUpdates()
-      }
-    
 }

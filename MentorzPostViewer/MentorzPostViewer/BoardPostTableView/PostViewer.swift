@@ -147,25 +147,15 @@ extension PostViewer: UserActivities{
         }
     }
     
-    func userUnLiked(postId: Int, handler: @escaping ((Int) -> ())) {
-        self.dataSourceTableView?.userUnlikedLiked(postId: postId){ (statusCode) in
-            if statusCode == 204{
-                handler(statusCode)
-            }
-            else{
-                handler(-1000)
-            }
+    func userUnLiked(postId: Int, handler: @escaping ((Bool) -> ())) {
+        self.dataSourceTableView?.userUnlikedLiked(postId: postId){ (done) in
+            handler(done)
         }
     }
     
-    func userLiked(postId: Int, handler: @escaping ((Int) -> ())) {
-        self.dataSourceTableView?.userLikedOn(postId: postId){ (statusCode) in
-            if statusCode == 204{
-                handler(statusCode)
-            }
-            else{
-                handler(-1000)
-            }
+    func userLiked(postId: Int, handler: @escaping ((Bool) -> ())) {
+        self.dataSourceTableView?.userLikedOn(postId: postId){ (done) in
+            handler(done)
         }
     }
     

@@ -5,6 +5,7 @@ PODS:
   - IQKeyboardManager (6.5.4)
   - LinkPreviewKit (0.4.1):
     - HTMLReader
+  - moa (12.0.0)
   - Moya (13.0.1):
     - Moya/Core (= 13.0.1)
   - Moya/Core (13.0.1):
@@ -23,6 +24,7 @@ DEPENDENCIES:
   - ExpandableLabel
   - IQKeyboardManager
   - LinkPreviewKit
+  - moa (~> 12.0)
   - Moya (~> 13.0)
   - ObjectMapper (~> 3.4)
   - PagingTableView
@@ -37,6 +39,7 @@ SPEC REPOS:
     - HTMLReader
     - IQKeyboardManager
     - LinkPreviewKit
+    - moa
     - Moya
     - ObjectMapper
     - PagingTableView
@@ -51,6 +54,7 @@ SPEC CHECKSUMS:
   HTMLReader: 2fc5ccf6a041b7070d9b43b101034cba63d2ae2a
   IQKeyboardManager: 72b359cd7e777e3a984cedbe05f8da45320cbb63
   LinkPreviewKit: d16933bdb90ad21bde386285abcb9dc207fabfdb
+  moa: e2346f12de6c65bbca4d103950d45db9e46785ef
   Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
   ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
   PagingTableView: ba7869ff22f7cf3f8b2190b0314688d2cb0e46c4
@@ -59,6 +63,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 4a5c38f64637a6d406098ec7b6c8633db7fc235d
+PODFILE CHECKSUM: 611593fe9574767a4de88408c9b37235f166fcbf
 
 COCOAPODS: 1.8.4

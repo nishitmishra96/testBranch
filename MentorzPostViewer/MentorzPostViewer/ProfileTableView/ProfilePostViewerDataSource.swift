@@ -27,7 +27,7 @@ class ProfilePostViewerDataSource:TableViewDataSource{
                     for post in listData.posts ?? []{
                         self.completePosts.append(CompletePost(post:post))
                     }
-                    self.delegate?.newPostsAppended(oldList: oldList ?? [], newList: self.completePosts ?? [])
+                    self.delegate?.newPostsAppended(oldList: oldList , newList: self.completePosts)
                 }
             }
             tableView?.isLoading = false

@@ -31,7 +31,7 @@ class PostsRestManager:NSObject{
                 }
 
             case .failure( _):
-                handler(nil,response.error?.response?.statusCode ?? 0)
+                handler(nil,response.error?.response?.statusCode ?? HttpResponseCodes.SomethingWentWrong.rawValue)
             }
         }
     }
@@ -43,44 +43,38 @@ class PostsRestManager:NSObject{
             case .success( let result):
                 do{
                     let responseDic = try JSONSerialization.jsonObject(with: result.data, options: []) as? [String:Any]
-                    print("Done")
                     handler(PostList(JSON: responseDic ?? [:]),result.statusCode)
                 }
                 catch{
-                    print("Not Done")
                     handler(nil,result.statusCode)
                 }
 
             case .failure(let error):
-                handler(nil,error.response?.statusCode ?? 0)
+                handler(nil,error.response?.statusCode ?? HttpResponseCodes.SomethingWentWrong.rawValue)
             }
         }
         
     }
     
-    func userLikedThePost(postId:String,userId:String,handler:@escaping ((Int)->())){
+    func userLikedThePost(postId:String,userId:String,handler:@escaping ((Bool)->())){
         
         postProvider.request(.likeAPost(postId: postId, userId: userId)) { (response) in
             switch response{
-            case .success(let result):
-                print("LIKED ",result.statusCode)
-                handler(result.statusCode)
-            case .failure(let error):
-                print("LIKE failed 309")
-                handler((response.error?.errorCode) ?? 309)
+            case .success(let _):
+                handler(true)
+            case .failure(let _):
+                handler(false)
             }
         }
     }
     
-    func userUnlikedThePost(postId:String,userId:String,handler:@escaping ((Int)->())){
+    func userUnlikedThePost(postId:String,userId:String,handler:@escaping ((Bool)->())){
         postProvider.request(.unlikeAPost(postId: postId, userId: userId)) { (response) in
             switch response{
             case .success(let result):
-                print("Unliked ",result.statusCode)
-                handler(result.statusCode)
+                handler(true)
             case .failure(let error):
-                print("UNLIKE failed 309")
-                handler((response.error?.errorCode) ?? 309)
+                handler(false)
             }
         }
     }
@@ -89,10 +83,8 @@ class PostsRestManager:NSObject{
         postProvider.request(.commentOnAPost(postId: postId, userId: userId, comment: comment)) { (response) in
             switch response{
             case .success(let result):
-                print("comment status ",result.statusCode)
                 handler(result.statusCode)
             case .failure(let error):
-                print("comment failed 309")
                 handler(309)
             }
         }
@@ -160,6 +152,7 @@ class PostsRestManager:NSObject{
     }
     
     func getProfileImageWith(userId:String,handler:@escaping ((ProfileImage?,Int?)->())){
+        
         if let profileImage = self.cache.object(forKey: userId as NSString){
             print("Image from cache")
             handler(profileImage, HttpResponseCodes.success.rawValue)
@@ -170,11 +163,11 @@ class PostsRestManager:NSObject{
             case .success(let result):
                 do{
                     let responseString = try result.mapString()
-                    let rating = ProfileImage(JSONString: responseString)
-                    if let ratingObj = rating{
-                        self.cache.setObject(ratingObj, forKey: userId as NSString)
+                    let profileImage = ProfileImage(JSONString: responseString)
+                    if let profileImg = profileImage{
+                        self.cache.setObject(profileImg, forKey: userId as NSString)
                     }
-                    handler(rating,result.statusCode)
+                    handler(profileImage,result.statusCode)
                 }catch{
                     handler(nil,HttpResponseCodes.SomethingWentWrong.rawValue)
                 }

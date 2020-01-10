@@ -268,9 +268,8 @@ class PostTableViewCell: UITableViewCell {
             if completePost?.post?.liked ?? false{
                 self.clickedLikeWhenAlreadyLiked()
                 notificationFeedbackGenerator.notificationOccurred(.success)
-                delegate?.userUnLiked(postId: /self.completePost?.post?.postId){ (statusCode) in
-                    if statusCode == 204{
-                        
+                delegate?.userUnLiked(postId: /self.completePost?.post?.postId){ (done) in
+                    if done{
                     }else{
                         self.notificationFeedbackGenerator.notificationOccurred(.error)
                         self.clickedLikeWhenAleadyDisliked()
@@ -279,10 +278,8 @@ class PostTableViewCell: UITableViewCell {
             }else{
                 self.clickedLikeWhenAleadyDisliked()
                 notificationFeedbackGenerator.notificationOccurred(.success)
-                delegate?.userLiked(postId: /completePost?.post?.postId){ (statusCode) in
-                    if statusCode == 204{
-                        
-                    }else{
+                delegate?.userLiked(postId: /completePost?.post?.postId){ (done) in
+                    if done{}else{
                         self.clickedLikeWhenAlreadyLiked()
                         self.notificationFeedbackGenerator.notificationOccurred(.error)
                     }

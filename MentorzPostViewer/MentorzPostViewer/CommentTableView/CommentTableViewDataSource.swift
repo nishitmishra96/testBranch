@@ -9,20 +9,24 @@
 import Foundation
 import UIKit
 import PagingTableView
-class CommentTableViewDataSource:BaseTableViewDataSource{
+class CommentTableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
     var postId:String?
+    var userId : String?
+    var delegate : DataForBoard?
     var allComments : [CompleteComment]?
+    override init(){}
     convenience init(userId:String,postId:String,comments:[CompleteComment]?){
-        self.init(userId:userId)
+        self.init()
+        self.userId = userId
         self.postId = postId
-        self.allComments = comments
         self.allComments = []
     }
     deinit {
         self.postId = nil
+        self.userId = nil
         self.allComments?.removeAll()
     }
-    override func getCommentForPost(tableView: PagingTableView? = nil, to pageNumber: Int) {
+    func getCommentForPost(tableView: PagingTableView? = nil, to pageNumber: Int) {
         tableView?.isLoading = true
         PostsRestManager.shared.getCommentsforPostId(userId: /self.userId, postId: /self.postId, pageNumber: pageNumber) { (commentList, statusCode) in
                 tableView?.refreshControl?.endRefreshing()
@@ -31,7 +35,7 @@ class CommentTableViewDataSource:BaseTableViewDataSource{
                     tableView?.reloadData()
                     tableView?.reset()
                 }
-                if statusCode == 200{
+            if statusCode == HttpResponseCodes.success.rawValue{
                     if let listData = commentList{
                         let oldList = self.allComments
                         for comment in listData.commentList ?? []{
@@ -54,11 +58,11 @@ class CommentTableViewDataSource:BaseTableViewDataSource{
     }
     
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return /self.allComments?.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CommentViewCell") as! CommentViewCell
         cell.delegate = (tableView as? UserActivities)
         cell.layoutIfNeeded()
@@ -66,17 +70,13 @@ class CommentTableViewDataSource:BaseTableViewDataSource{
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return self.getCellHeight(completeComment: allComments?[indexPath.row])
         return UITableView.automaticDimension
     }
-//    func getCellHeight(completeComment:CompleteComment?) -> CGFloat{
-//        let height = /completeComment?.comment?.comment?.estimatedLabelHeight(text: /completeComment?.comment?.comment, width: (UIScreen.main.bounds.width - 112), font: .systemFont(ofSize: 14.0, weight: .regular))
-//        return 42 + height + 35
-//    }
+
 }
 
-extension CommentTableViewDataSource{
-    override func paginate(_ tableView: PagingTableView, to page: Int) {
+extension CommentTableViewDataSource:PagingTableViewDelegate{
+    func paginate(_ tableView: PagingTableView, to page: Int) {
         self.getCommentForPost(tableView: tableView, to: page)
     }
 }

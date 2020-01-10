@@ -142,21 +142,21 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
         }
         return nil
     }
-    func userLikedOn(postId:Int,handler:@escaping (Int)->()){
-        PostsRestManager.shared.userLikedThePost(postId: "\(postId)", userId: self.userId ?? "\(0)") { (statusCode) in
-            if statusCode == 204{
-                handler(statusCode)
+    func userLikedOn(postId:Int,handler:@escaping (Bool)->()){
+        PostsRestManager.shared.userLikedThePost(postId: "\(postId)", userId: self.userId ?? "\(0)") { (done) in
+            if done{
+                handler(done)
             }else{
-                handler(-1000)
+                handler(!done)
             }
         }
     }
-    func userUnlikedLiked(postId:Int,handler:@escaping (Int)->()){
-        PostsRestManager.shared.userUnlikedThePost(postId: "\(postId)", userId: self.userId ?? "\(0)") { (statusCode) in
-            if statusCode == 204{
-                handler(statusCode)
+    func userUnlikedLiked(postId:Int,handler:@escaping (Bool)->()){
+        PostsRestManager.shared.userUnlikedThePost(postId: "\(postId)", userId: self.userId ?? "\(0)") { (done) in
+            if done{
+                handler(done)
             }else{
-                handler(-1000)
+                handler(!done)
             }
         }
     }

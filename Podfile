@@ -13,8 +13,8 @@ pod 'SDWebImage', '~> 5.0'
 pod "PagingTableView"
 pod "LinkPreviewKit"
 pod 'IQKeyboardManager'
-pod 'gtm-session-fetcher'
-#pod 'Cloudinary', '~> 2.0'
+pod 'moa', '~> 12.0'
+
 
 end
 
