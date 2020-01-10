@@ -9,8 +9,6 @@
 import Foundation
 class CompletePost:NSObject{
     var post:Post?
-    var profileImage:ProfileImage?
-    var rating:Rating?
     var comments : [CompleteComment]? = []
     override init(){
         super.init()
@@ -20,23 +18,14 @@ class CompletePost:NSObject{
         self.post = post
     }
 
-    func getRating(handler:@escaping ((Int?)->())){
-        PostsRestManager.shared.getUserRating(userId: "\(/post?.userId)") { (ratings, statusCode) in
-            if statusCode == HttpResponseCodes.success.rawValue{
-                self.rating = ratings
-            }else{
-            }
-            handler(statusCode)
+    func getRating(handler:@escaping ((Double?,Int?)->())){
+        PostsRestManager.shared.getUserRating(userId: "\(/post?.userId)") { (rating, statusCode) in
+            handler(rating?.rating,statusCode)
         }
     }
-    func getProfileImage(handler:@escaping ((Int?)->())){
+    func getProfileImage(handler:@escaping ((String?,Int?)->())){
         PostsRestManager.shared.getProfileImageWith(userId: "\(/post?.userId)") { (profileImage, statusCode) in
-            if statusCode == HttpResponseCodes.success.rawValue{
-                self.profileImage = profileImage
-            }else{
-            }
-            handler(statusCode)
-
+            handler(profileImage?.hresId,statusCode)
         }
     }
 }

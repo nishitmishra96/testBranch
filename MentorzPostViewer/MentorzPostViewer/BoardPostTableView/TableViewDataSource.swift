@@ -81,7 +81,6 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as! PostTableViewCell
             cell.delegate = (tableView as? UserActivities)
             cell.userId = self.userId
-            cell.layoutIfNeeded()
             cell.setData(cellPost: completePostsWithFilter[indexPath.row])
             self.getImagePreview(completePost: completePostsWithFilter[indexPath.row], tableView: tableView, indexPath: indexPath,cell: cell)
             return cell
@@ -92,8 +91,9 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
         if !uploadingNewPost{
             PostsRestManager.shared.updatePostViewCount(userId: userId, postId: "\(String(describing: self.completePosts[indexPath.row].post?.postId))") { (statusCode) in
                 if statusCode == HttpResponseCodes.NotFound.rawValue{
-                    print(statusCode,"For id ",String(describing: self.completePosts[indexPath.row].post?.postId),"and description ",/self.completePostsWithFilter[indexPath.row].post?.content?.descriptionField)
                     (cell as! PostTableViewCell).viewCount.text = "\(/self.completePostsWithFilter[indexPath.row].post?.viewCount+1)"
+                }else{
+                    print("view count not increased")
                 }
             }
         }
@@ -103,11 +103,6 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
         return UITableView.automaticDimension
     }
     
-//    func cellHeight(indexPath:IndexPath)-> CGFloat{
-//        let height = /self.completePosts[indexPath.row].descriptionText?.estimatedLabelHeight(text: /self.completePosts[indexPath.row].descriptionText, width: UIScreen.main.bounds.width - 8, font: UIFont.systemFont(ofSize: 14.0))
-//        return (152 + /height + (UIScreen.main.bounds.width - 8))
-//    }
-    
     func getImagePreview(completePost:CompletePost?,tableView:UITableView,indexPath:IndexPath,cell:UITableViewCell){
         if completePost?.post?.content?.mediaType == "TEXT" && /completePost?.post?.content?.lresId?.count <
 2{
@@ -116,14 +111,11 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
                     if preview != nil{
                     if ((preview?.first as! LKLinkPreview).imageURL != nil){
                         completePost?.post?.content?.lresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
-                        
-                        print("HEY LINK: ",/(preview?.first as! LKLinkPreview).imageURL?.absoluteString," And post description: ",/completePost?.post?.content?.descriptionField)
                         completePost?.post?.content?.hresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
                         tableView.reloadRows(at: [indexPath], with: .automatic)
-//                        (cell as? PostTableViewCell)?.setData(cellPost: completePost)
                     }
                     }else{
-                        
+
                     }
                 }
         }else{

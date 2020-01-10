@@ -120,10 +120,10 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bLG-uZ-Fzz">
-                                <rect key="frame" x="4" y="67" width="598" height="20"/>
+                                <rect key="frame" x="4" y="67" width="598" height="38"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="1000" text="kjasdl" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IOG-Ba-paV" customClass="TTTAttributedLabel">
-                                        <rect key="frame" x="0.0" y="0.0" width="598" height="20"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="598" height="38"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <accessibilityTraits key="traits" link="YES" staticText="YES"/>
                                         </accessibility>
@@ -134,7 +134,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pdy-4Y-V9x">
-                                <rect key="frame" x="527" y="91" width="75" height="30"/>
+                                <rect key="frame" x="527" y="109" width="75" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="Pyv-XU-HFo"/>
                                     <constraint firstAttribute="height" constant="30" id="pIL-bs-xbf"/>
@@ -275,8 +275,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="X6u-f4-XeL" secondAttribute="trailing" id="8By-cZ-fqU"/>
-                            <constraint firstItem="Vqt-dR-6TV" firstAttribute="top" secondItem="bLG-uZ-Fzz" secondAttribute="bottom" constant="56" id="ABi-7n-2Wm"/>
                             <constraint firstAttribute="trailing" secondItem="2Uv-SW-esn" secondAttribute="trailing" constant="5" id="CR7-hS-RmP"/>
+                            <constraint firstItem="Vqt-dR-6TV" firstAttribute="top" secondItem="Pdy-4Y-V9x" secondAttribute="bottom" constant="4" id="DSd-yf-IOP"/>
                             <constraint firstItem="Pdy-4Y-V9x" firstAttribute="trailing" secondItem="IOG-Ba-paV" secondAttribute="trailing" id="Eff-RG-0XT"/>
                             <constraint firstItem="Pdy-4Y-V9x" firstAttribute="top" secondItem="bLG-uZ-Fzz" secondAttribute="bottom" constant="4" id="KBx-n5-Puu"/>
                             <constraint firstItem="X6u-f4-XeL" firstAttribute="top" secondItem="2Uv-SW-esn" secondAttribute="bottom" constant="4" id="UGI-hO-bTP"/>
@@ -292,6 +292,7 @@
                             <constraint firstAttribute="trailing" secondItem="r5Q-9z-Q8m" secondAttribute="trailing" constant="1" id="tbV-MG-2v4"/>
                             <constraint firstItem="2Uv-SW-esn" firstAttribute="top" secondItem="Vqt-dR-6TV" secondAttribute="bottom" constant="4" id="wv0-PK-1ux"/>
                             <constraint firstAttribute="trailing" secondItem="Vqt-dR-6TV" secondAttribute="trailing" constant="4" id="xoL-KY-eVo"/>
+                            <constraint firstItem="Vqt-dR-6TV" firstAttribute="top" secondItem="bLG-uZ-Fzz" secondAttribute="bottom" constant="38" id="yta-Q0-JwP"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -321,6 +322,7 @@
                 <outlet property="postText" destination="IOG-Ba-paV" id="HTS-9M-cRV"/>
                 <outlet property="profileImage" destination="lvq-gX-C3m" id="dvb-g8-Nvp"/>
                 <outlet property="readMore" destination="Pdy-4Y-V9x" id="V3U-41-spL"/>
+                <outlet property="readMoreButtonHeight" destination="pIL-bs-xbf" id="iDQ-n7-6uI"/>
                 <outlet property="secondStar" destination="uf8-zD-EKH" id="fsl-tc-15r"/>
                 <outlet property="shareButton" destination="sNR-s8-ndQ" id="vaW-h3-aEq"/>
                 <outlet property="shareCount" destination="FLE-Jo-h2E" id="4tG-nN-aNK"/>

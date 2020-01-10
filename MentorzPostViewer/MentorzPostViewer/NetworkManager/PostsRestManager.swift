@@ -9,9 +9,12 @@
 import Foundation
 import Moya
 import ObjectMapper
+import LinkPreviewKit
+
 
 class PostsRestManager:NSObject{
     let cache = NSCache<NSString, ProfileImage>()
+    let urlCache = NSCache<NSString,NSString>()
     static var shared = PostsRestManager()
     private var postProvider = MoyaProvider<ApiCollection>()
     func getPosts(userId:String,pageNumber:Int,handler: @escaping ((PostList?,Int)->(Void))){

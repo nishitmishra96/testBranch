@@ -46,11 +46,11 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var viewWithImageAndButtonHeight: NSLayoutConstraint!
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var readMoreButtonHeight: NSLayoutConstraint!
     
     var didTapOnImageView:((_ imageurl:String)->())?
     var didTapOnVideoPlay:((_ videoUrl:String)->())?
     var delegate : UserActivities?
-    let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
     weak var completePost:CompletePost?
     var url : URL?
     var userId : String?
@@ -172,9 +172,9 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func setProfieImage(completePost:CompletePost){
-        completePost.getProfileImage { (statusCode) in
+        completePost.getProfileImage { (urlString,statusCode) in
             if statusCode == HttpResponseCodes.success.rawValue{
-                self.profileImage.moa.url = /completePost.profileImage?.hresId
+                self.profileImage.moa.url = urlString
             }else{
                 self.profileImage.image = UIImage(named:"default_avt_square")
             }
@@ -200,19 +200,19 @@ class PostTableViewCell: UITableViewCell {
         return nil
     }
     func setRatingwith(completePost:CompletePost){
-        completePost.getRating() { (statusCode) in
+        completePost.getRating() { (rating,statusCode) in
             if statusCode == HttpResponseCodes.success.rawValue{
-            if let rating = completePost.rating{
-                for rating in 0..<Int(/rating.rating){
+            if let rating = rating{
+                for rating in 0..<Int(/rating){
                     self.images[rating].image = UIImage(named: "selected_rate")
                 }
-                let rate = /rating.rating! - Double(Int(/rating.rating))
+                let rate = /rating - Double(Int(/rating))
 
                 if (rate > RATING_ROUNDUP_MIN_VALUE && rate < RATING_ROUNDUP_MAX_VALUE){
-                    self.images[Int(/rating.rating)].image = UIImage(named: "selected_halfRate")
+                    self.images[Int(/rating)].image = UIImage(named: "selected_halfRate")
                 }
                 if rate > RATING_ROUNDUP_MAX_VALUE{
-                    self.images[Int(/rating.rating)].image = UIImage(named: "selected_rate")
+                    self.images[Int(/rating)].image = UIImage(named: "selected_rate")
                 }
                 }
             }else{
@@ -264,24 +264,19 @@ class PostTableViewCell: UITableViewCell {
     }
     
     @IBAction func likeButtonPressed(_ sender: Any) {
-        notificationFeedbackGenerator.prepare()
             if completePost?.post?.liked ?? false{
                 self.clickedLikeWhenAlreadyLiked()
-                notificationFeedbackGenerator.notificationOccurred(.success)
                 delegate?.userUnLiked(postId: /self.completePost?.post?.postId){ (done) in
                     if done{
                     }else{
-                        self.notificationFeedbackGenerator.notificationOccurred(.error)
                         self.clickedLikeWhenAleadyDisliked()
                     }
                 }
             }else{
                 self.clickedLikeWhenAleadyDisliked()
-                notificationFeedbackGenerator.notificationOccurred(.success)
                 delegate?.userLiked(postId: /completePost?.post?.postId){ (done) in
                     if done{}else{
                         self.clickedLikeWhenAlreadyLiked()
-                        self.notificationFeedbackGenerator.notificationOccurred(.error)
                     }
                 }
                 }
