@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BoardPostUITableView: BaseTableView {
+public class BoardPostUITableView: BaseTableView {
     var controller:PostController?
     open override func awakeFromNib() {
         super.awakeFromNib()
@@ -16,7 +16,16 @@ class BoardPostUITableView: BaseTableView {
     
     @objc override func didPullToRefresh(){
         self.refreshControl?.beginRefreshing()
-        
+        self.controller?.getPost(forPage: 0)
     }
-    
+    public func filterLocalPost(string:String){
+        self.controller?.filterPostString = string
+        self.reloadData()
+    }
+    public func setupTableViewForBoardPost(user id:String){
+        self.controller = PostController(userid: id, base: self)
+    }
+    public func setupTableViewForBoardPostBasedOnInterestList(user id:String,interesetList:[Int]){
+        self.controller = PostController(userid: id, base: self, interestList: interesetList)
+    }
 }

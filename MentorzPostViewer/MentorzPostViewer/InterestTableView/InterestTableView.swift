@@ -8,13 +8,13 @@
 
 import Foundation
 import UIKit
-class InterestTableView:BoardPostTableView{
-    
-    override public func getPostsFor(userId: String) {
-        self.dataSourceTableView = InterestTableViewDataSource()
-        dataSourceTableView?.delegate = self
-        pagingDelegate = dataSourceTableView
-        self.dataSource = dataSourceTableView
-        self.delegate = dataSourceTableView
-    }
-}
+//class InterestTableView:BoardPostTableView{
+//    
+//    override public func getPostsFor(userId: String) {
+//        self.dataSourceTableView = InterestTableViewDataSource()
+//        dataSourceTableView?.delegate = self
+//        pagingDelegate = dataSourceTableView
+//        self.dataSource = dataSourceTableView
+//        self.delegate = dataSourceTableView
+//    }
+//}

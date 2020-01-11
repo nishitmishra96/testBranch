@@ -11,10 +11,11 @@ import Foundation
 import PagingTableView
 class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingTableViewDelegate {
     private var userID:String
-    private var tableView:BaseTableView
+    private weak var tableView:BaseTableView?
     private var boardPostOriginal:[CompletePost] = []
     private var postToShowOnUI:[CompletePost] = []
-    
+    private var interest : [Int] = []
+
     var filterPostString:String?{
         didSet{
             if /filterPostString == ""{
@@ -27,10 +28,13 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         }
     }
     
-    init(userid:String,base tableView:BaseTableView) {
+    init(userid:String,base tableView:BaseTableView,interestList:[Int] = []) {
         self.userID = userid
         self.tableView = tableView
+        self.interest = interestList
         super.init()
+        self.tableView?.dataSource = self
+        self.getPost(forPage: 0)
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -59,13 +63,17 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
 }
 extension PostController{
     func getPost(forPage:Int){
-        tableView.isLoading = true
+        if self.interest.count > 0 {
+            self.getPostByInterests(pageNumber: forPage)
+            return;
+        }
+        tableView?.isLoading = true
         PostsRestManager.shared.getPosts(userId: self.userID , pageNumber: forPage) { (postList, statusCode) -> (Void) in
-            self.tableView.refreshControl?.endRefreshing()
+            self.tableView?.refreshControl?.endRefreshing()
             if forPage == 0 && /self.boardPostOriginal.count > 0{
                 self.boardPostOriginal.removeAll()
-                self.tableView.reloadData()
-                self.tableView.reset()
+                self.tableView?.reloadData()
+                self.tableView?.reset()
             }
             if statusCode == 200{
                 if let listData = postList{
@@ -73,22 +81,58 @@ extension PostController{
                     for post in listData.posts ?? []{
                         self.boardPostOriginal.append(CompletePost(post:post))
                     }
-                    self.tableView.updateTableViewForNewAppendedData(oldList: oldList.count, newList: self.postToShowOnUI.count)
+                    self.tableView?.updateTableViewForNewAppendedData(oldList: oldList.count, newList: self.postToShowOnUI.count)
                 }
             }
             let str = self.filterPostString
             self.filterPostString = str
-            self.tableView.isLoading = false
+            self.tableView?.isLoading = false
+            self.tableView?.reloadData()
         }
-        
     }
+    func getPostByInterests(pageNumber:Int){
+           var queryparams = "?"
+           for value in interest{
+               queryparams = queryparams+"interest=\(value)&"
+           }
+        PostsRestManager.shared.getPostOnUserInterest(userId: self.userID, interestString: queryparams, pageNumber: pageNumber) { (postList, statusCode) -> (Void) in
+               self.tableView?.refreshControl?.endRefreshing()
+               if pageNumber == 0 && /self.boardPostOriginal.count > 0{
+                   self.boardPostOriginal.removeAll()
+                   self.tableView?.reloadData()
+                   self.tableView?.reset()
+               }
+               if statusCode == 200{
+                   if let listData = postList{
+                       let oldList = self.postToShowOnUI
+                       for post in listData.posts ?? []{
+                           self.boardPostOriginal.append(CompletePost(post:post))
+                       }
+                       self.tableView?.updateTableViewForNewAppendedData(oldList: oldList.count, newList: self.postToShowOnUI.count)
+                   }
+               }
+               let str = self.filterPostString
+               self.filterPostString = str
+               self.tableView?.isLoading = false
+               self.tableView?.reloadData()
+           }
+       }
 }
 extension PostController:PostTableViewCellDelegate{
     func shouldRemoveCell(indexPath: IndexPath) {
-        self.tableView.deleteRows(at: [indexPath], with: .left)
+        if (indexPath.section != 0){
+        self.tableView?.beginUpdates()
+        self.boardPostOriginal = self.boardPostOriginal.filter { (post) -> Bool in
+            return (post.post?.postId != postToShowOnUI[indexPath.row].post?.postId)
+        }
+        let filterDataString = self.filterPostString
+        self.filterPostString = filterDataString
+        self.tableView?.deleteRows(at: [indexPath], with: .left)
+        self.tableView?.endUpdates()
+        }
     }
     
     func reloadTableView(indexPath: IndexPath) {
-        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView?.reloadRows(at: [indexPath], with: .automatic)
     }
 }
