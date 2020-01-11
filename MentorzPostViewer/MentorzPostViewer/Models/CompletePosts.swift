@@ -10,6 +10,7 @@ import Foundation
 class CompletePost:NSObject{
     var post:Post?
     var comments : [CompleteComment]? = []
+    var isUploading = false
     override init(){
         super.init()
     }

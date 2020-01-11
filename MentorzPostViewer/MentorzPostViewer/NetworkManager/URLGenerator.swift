@@ -9,7 +9,7 @@
 import Foundation
 
 class URLGenerator:NSObject{
-    
+    static var shared = URLGenerator()
     var isStaging = false
     
     var baseUrl : String{

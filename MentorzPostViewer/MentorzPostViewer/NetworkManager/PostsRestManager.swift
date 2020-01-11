@@ -105,7 +105,23 @@ class PostsRestManager:NSObject{
             }
         }
     }
-    
+    func getPostByPostId(userId:String,postId:String,handler:@escaping ((Post?,Int)->())){
+        postProvider.request(.getPostByPostId(userId: userId, postId: postId)) { (response) in
+            switch response{
+            case .success(let result):
+                do{
+                    let responseString = try result.mapString()
+                    let rating = Post(JSONString: responseString)
+                    handler(rating,result.statusCode)
+                }catch{
+                    handler(nil,result.statusCode)
+                }
+            case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+                handler(nil,/error.response?.statusCode)
+            }
+        }
+    }
     func getPostOnUserInterest(userId:String,interestString:String,pageNumber:Int,handler:@escaping (PostList?,Int)->(Void)){
         
         postProvider.request(.getPostByInterest(userId: userId, interestString: interestString, pageNumber: pageNumber)) { (response) in

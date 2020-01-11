@@ -13,6 +13,7 @@ import ObjectMapper
 enum ApiCollection{
     case getMyBoardPost(userId:String,pageNumber:Int)
     case getPostByID(userId:String,pageNumber:Int)
+    case getPostByPostId(userId:String,postId:String)
     case likeAPost(postId:String,userId:String)
     case unlikeAPost(postId:String,userId:String)
     case commentOnAPost(postId:String,userId:String,comment:String)
@@ -41,10 +42,10 @@ extension ApiCollection:TargetType{
     var baseURL: URL {
         switch self {
         case .getPostByInterest(userId: let userid, interestString: let interestString, pageNumber: let pagenumber):
-            return URL(string: URLGenerator().baseUrl + "/mentorz/api/v3/\(userid)/post/search\(interestString)pageNo=\(pagenumber)" )!
+            return URL(string: URLGenerator.shared.baseUrl + "/mentorz/api/v3/\(userid)/post/search\(interestString)pageNo=\(pagenumber)" )!
 
         default:
-            return URL(string: URLGenerator().baseUrl )!
+            return URL(string: URLGenerator.shared.baseUrl )!
         }
     }
     
@@ -82,12 +83,14 @@ extension ApiCollection:TargetType{
             return "/mentorz/api/v3/user/signed/geturl/object/\(contentName)"
         case .uploadPost(let userId,_):
             return "/mentorz/api/v3/\(userId)/post"
+        case .getPostByPostId(let userId, let postId):
+            return "/mentorz/api/v3/\(userId)/post/\(postId)"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getPostByID,.getMyBoardPost,.getMyPosts,.getUserRating,.getPostByInterest,.getProfileImage,.getCommentList,.getUploadSessionURI,.getSignedURL:
+        case .getPostByID,.getMyBoardPost,.getMyPosts,.getUserRating,.getPostByInterest,.getProfileImage,.getCommentList,.getUploadSessionURI,.getSignedURL,.getPostByPostId:
             return .get
         case .likeAPost,.unlikeAPost,.reportAbuse,.viewPost:
             return .post
@@ -137,6 +140,8 @@ extension ApiCollection:TargetType{
         case .uploadPost(_,let newPost):
             let dict = newPost.toJSON()
             return .requestCompositeParameters(bodyParameters: dict, bodyEncoding: JSONEncoding.default, urlParameters: [:])
+        case .getPostByPostId(let userId, let postId):
+            return .requestPlain
         }
     }
     var validationType: ValidationType {

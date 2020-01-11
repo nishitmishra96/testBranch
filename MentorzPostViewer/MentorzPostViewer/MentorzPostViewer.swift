@@ -15,6 +15,7 @@ import UIKit
 }
 @objc public protocol MentorzPostViewerDatasource{
     func authToken()->String
+    func getUserId()->String
 }
 @objc public  class MentorzPostViewer: NSObject {
     @objc public static var shared = MentorzPostViewer()
@@ -25,5 +26,8 @@ import UIKit
     @objc public var delegate:MentorzPostViewerDelegates?
     private override init() {
         super.init()
+    }
+    public func setEnvironment(isStaging:Bool){
+        URLGenerator.shared.isStaging = isStaging
     }
 }

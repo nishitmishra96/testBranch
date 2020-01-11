@@ -19,7 +19,6 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var viewWithProfileImage: UIView!
     @IBOutlet weak var userActivitiesView: UIView!
-    
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var postText: TTTAttributedLabel!
     @IBOutlet weak var name: UILabel!
@@ -47,7 +46,6 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var readMoreButtonHeight: NSLayoutConstraint!
-    
     var didTapOnImageView:((_ imageurl:String)->())?
     var didTapOnVideoPlay:((_ videoUrl:String)->())?
     var delegate : UserActivities?
@@ -104,7 +102,7 @@ class PostTableViewCell: UITableViewCell {
         self.postText.delegate = self
         profileImage.layer.cornerRadius = 25
         self.mainPostImage.image = UIImage(named:"loading_data_logo")
-//        self.profileImage.image = UIImage(named: "default_avt_square")
+        self.profileImage.image = UIImage(named: "default_avt_square")
         self.postText.numberOfLines = 2
         self.postText.lineSpacing = 5
     }
@@ -119,8 +117,8 @@ class PostTableViewCell: UITableViewCell {
 //        commentCount.text = ""
 //        shareCount.text = ""
 //        viewCount.text = ""
-//        self.profileImage.image = UIImage(named: "default_avt_square")
-//        self.mainPostImage.image = UIImage(named:"loading_data_logo")
+        self.profileImage.image = UIImage(named: "default_avt_square")
+        self.mainPostImage.image = UIImage(named:"loading_data_logo")
 //        for rating in 0..<5{
 //           self.images[rating].image = UIImage(named: "unselected_rate")
 //        }
@@ -130,7 +128,7 @@ class PostTableViewCell: UITableViewCell {
         self.completePost = newPost
         self.setProfieImage(completePost: cellPost!)
         self.setRatingwith(completePost:cellPost!)
-        self.postText.text = completePost?.post?.content?.descriptionField
+        self.postText.text = completePost?.post?.content?.postText
         self.name.text = completePost?.post?.name?.removingPercentEncoding
         self.readMore.setTitle("Read More", for: .normal)
         if let likeCount = completePost?.post?.likeCount{
@@ -147,9 +145,9 @@ class PostTableViewCell: UITableViewCell {
         if /completePost?.post?.content?.lresId?.count >= 2{
             self.mainPostImage.isHidden = false
             self.playButton.isHidden = false
+            viewWithImageAndButtonHeight.constant = self.viewWithImageAndButton.frame.width
             self.mainPostImage.image = UIImage(named:"loading_data_logo")
             self.mainPostImage.moa.url = /completePost?.post?.content?.lresId
-            viewWithImageAndButtonHeight.constant = self.viewWithImageAndButton.frame.width
         }else{
             viewWithImageAndButtonHeight.constant = 0
             self.mainPostImage.isHidden = true
@@ -190,7 +188,7 @@ class PostTableViewCell: UITableViewCell {
     func getFirstUrl()-> NSTextCheckingResult?{
         do{
             let dataDetector = try NSDataDetector.init(types: NSTextCheckingResult.CheckingType.link.rawValue)
-            let firstMatch = dataDetector.firstMatch(in: /completePost?.post?.content?.descriptionField, options: [], range: NSRange(location: 0, length: /completePost?.post?.content!.descriptionField?.utf16.count))
+            let firstMatch = dataDetector.firstMatch(in: /completePost?.post?.content?.postText, options: [], range: NSRange(location: 0, length: /completePost?.post?.content!.postText?.utf16.count))
             return firstMatch
         }
         catch {
@@ -315,7 +313,7 @@ class PostTableViewCell: UITableViewCell {
     }
     @IBAction func shareButtonPressed(_ sender: Any) {
         let url : NSURL?
-        let caption:NSString = NSString(string: /self.completePost?.post?.content?.descriptionField)
+        let caption:NSString = NSString(string: /self.completePost?.post?.content?.postText)
         if self.completePost?.post?.content?.mediaType != "TEXT"{
             url = NSURL(string: /self.completePost?.post?.content?.hresId)!
         }else{

@@ -44,7 +44,7 @@ public class BoardPostTableView:BaseTableView {
         self.delegate = dataSourceTableView
     }
     open func reload() {
-        (self.dataSourceTableView)?.uploadingNewPost = localPost?.isUploading ?? false
+//        (self.dataSourceTableView)?.uploadingNewPost = localPost?.isUploading ?? false
         self.reloadData()
     }
     
@@ -174,7 +174,7 @@ extension BoardPostTableView:AddPost{
         let uploadPostVC = Storyboard.home.instanceOf(viewController: UploadPostPopupVC.self)!
         uploadPostVC.delegate = self
         self.currentlyPresentedVC = uploadPostVC
-        let addToPlaylistAlert = UIAlertController(title: "Add Post", message: "", preferredStyle: .alert)
+        let uploadPopUp = UIAlertController(title: "Add Post", message: "", preferredStyle: .alert)
         let uploadAction = UIAlertAction(title: "Upload", style: .default) { (uploadAction) in
                 self.currentlyPresentedVC?.dismiss(animated: true, completion: nil)
                 self.uploadContent()
@@ -184,13 +184,14 @@ extension BoardPostTableView:AddPost{
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive){ _ in
             self.currentlyPresentedVC?.dismiss(animated: true, completion: nil)
         }
-        addToPlaylistAlert.addAction(uploadAction)
-        addToPlaylistAlert.addAction(cancelAction)
-        addToPlaylistAlert.preferredContentSize = UIApplication.shared.keyWindow?.frame.offsetBy(dx: 50, dy: 50).size ?? CGSize.zero
-        addToPlaylistAlert.setValue(uploadPostVC, forKey: "contentViewController")
-        let height:NSLayoutConstraint = NSLayoutConstraint(item: addToPlaylistAlert.view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 300)
-        addToPlaylistAlert.view.addConstraint(height)
-        UIApplication.shared.keyWindow?.rootViewController?.present(addToPlaylistAlert, animated: true, completion: nil)
+        uploadPopUp.addAction(uploadAction)
+        uploadPopUp.addAction(cancelAction)
+        uploadPopUp.preferredContentSize = UIApplication.shared.keyWindow?.frame.offsetBy(dx: 50, dy: 50).size ?? CGSize.zero
+        uploadPopUp.setValue(uploadPostVC, forKey: "contentViewController")
+        let height:NSLayoutConstraint = NSLayoutConstraint(item: uploadPopUp.view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 300)
+        uploadPopUp.view.addConstraint(height)
+        uploadPopUp.modalPresentationStyle = .overFullScreen
+        UIApplication.shared.keyWindow?.rootViewController?.present(uploadPopUp, animated: true, completion: nil)
     }
 }
 
@@ -201,28 +202,24 @@ extension BoardPostTableView:UploadPostDelegate{
     }
     
     func uploadContent() {
-        self.localPost?.isUploading = true
-        (self.dataSourceTableView)?.uploadingNewPost = true
-        self.beginUpdates()
-        self.insertRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-        self.endUpdates()
+        self.dataSourceTableView?.uploadingNewPost = true
+        self.reloadSections(IndexSet(integersIn: 0...0), with: UITableView.RowAnimation.top)
         localPost?.delegate = self.cellForRow(at: IndexPath(row: 0, section: 0)) as! UploadProgressCell
         localPost?.descriptionFieldText = "\(/(self.currentlyPresentedVC as! UploadPostPopupVC).descriptionField.text)"
-        
-        UploadTaskManager.shared.uploadContent(localPost: self.localPost){(newPost,statusCode) in
-            self.localPost?.isUploading = false
+        let uploader = UploadTaskManager()
+        (self.cellForRow(at: IndexPath(row: 0, section: 0)) as! UploadProgressCell).delegate = uploader
+        uploader.uploadContent(localPost: self.localPost){(newPost,statusCode) in
             (self.dataSourceTableView)?.uploadingNewPost = false
             if statusCode == HttpResponseCodes.success.rawValue{
                 if let newPostToShow = newPost{
-                    self.beginUpdates()
-                    self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-                    self.endUpdates()
-                    self.beginUpdates()
+                    self.dataSourceTableView?.uploadingNewPost = false
+                    self.reloadSections(IndexSet(integersIn: 0...0), with: UITableView.RowAnimation.top)
                     (self.dataSourceTableView)?.completePosts.insert(CompletePost(post: newPostToShow), at: 0)
-                    self.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+                    (self.dataSourceTableView)?.completePostsWithFilter.insert(CompletePost(post: newPostToShow), at: 0)
+                    self.beginUpdates()
+                    self.insertRows(at: [IndexPath(row: 0, section: 1)], with: .bottom)
                     self.endUpdates()
-                    newPostToShow.content = newPostToShow.contents?.first
-                    (self.cellForRow(at: IndexPath(row: 0, section: 0)) as? PostTableViewCell)?.setData(cellPost: CompletePost(post: newPostToShow))
+//                    (self.cellForRow(at: IndexPath(row: 0, section: 0)) as? PostTableViewCell)?.setData(cellPost: CompletePost(post: newPostToShow))
                 }
                 
             }else{

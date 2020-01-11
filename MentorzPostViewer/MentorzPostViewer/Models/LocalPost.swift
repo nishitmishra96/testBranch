@@ -15,7 +15,7 @@ class LocalPost:NSObject{
     var imageDataToBeUploaded : Data?
     var isImage = false
     var videoFileURL : NSURL?
-    var isUploading = false
+//    var isUploading = false
     var descriptionFieldText : String?
     var delegate : UploadPostProgressDelegate?
 }

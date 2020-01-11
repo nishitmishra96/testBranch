@@ -15,15 +15,15 @@ import LinkPreviewKit
 
 
 class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
-    public var uploadingNewPost = false
-        var delegate : DataForBoard?
-        var userId:String?
-        var completePosts = [CompletePost]()
-        var completePostsWithFilter = [CompletePost]()
-        init(userId:String) {
-            self.userId = userId
-            completePosts = []
-        }
+    var uploadingNewPost = false
+    var delegate : DataForBoard?
+    var userId:String?
+    var completePosts = [CompletePost]()
+    var completePostsWithFilter = [CompletePost]()
+    init(userId:String) {
+        self.userId = userId
+        completePosts = []
+    }
     convenience override init(){
         self.init()
         
@@ -33,9 +33,9 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
             if /filterPostString == ""{
                 self.completePostsWithFilter = completePosts
             }else{
-            self.completePostsWithFilter = completePosts.filter({ (post) -> Bool in
-                return /post.post?.content?.descriptionField?.lowercased().contains(/filterPostString?.lowercased()) || /post.post?.name?.lowercased().contains(/filterPostString?.lowercased())  || /post.post?.lastName?.lowercased().contains(/filterPostString?.lowercased())
-            })
+                self.completePostsWithFilter = completePosts.filter({ (post) -> Bool in
+                    return /post.post?.content?.postText?.lowercased().contains(/filterPostString?.lowercased()) || /post.post?.name?.lowercased().contains(/filterPostString?.lowercased())  || /post.post?.lastName?.lowercased().contains(/filterPostString?.lowercased())
+                })
             }
         }
     }
@@ -63,30 +63,35 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            if uploadingNewPost {
-                return completePostsWithFilter.count + 1
-            }else{
+        if section == 0{
+            return self.uploadingNewPost ? 1 : 0
+        }else{
             return completePostsWithFilter.count
-            }
         }
+        
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            if uploadingNewPost {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "UploadProgressCell", for: indexPath) as! UploadProgressCell
-                cell.delegate.add(tableView as! BoardPostTableView)
-                cell.delegate.add(UploadTaskManager.shared)
-            return cell
-            }
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as! PostTableViewCell
-            cell.delegate = (tableView as? UserActivities)
-            cell.userId = self.userId
-            cell.setData(cellPost: completePostsWithFilter[indexPath.row])
-            self.getImagePreview(completePost: completePostsWithFilter[indexPath.row], tableView: tableView, indexPath: indexPath,cell: cell)
+        if indexPath.section == 0{
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UploadProgressCell", for: indexPath) as! UploadProgressCell
             return cell
         }
-
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as! PostTableViewCell
+        cell.delegate = (tableView as? UserActivities)
+        cell.userId = self.userId
+        cell.setData(cellPost: completePostsWithFilter[indexPath.row])
+        self.getImagePreview(completePost: completePostsWithFilter[indexPath.row], tableView: tableView, indexPath: indexPath,cell: cell)
+        return cell
+    }
+    
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 0{
+            return
+        }
         if !uploadingNewPost{
             PostsRestManager.shared.updatePostViewCount(userId: userId, postId: "\(String(describing: self.completePosts[indexPath.row].post?.postId))") { (statusCode) in
                 if statusCode == HttpResponseCodes.NotFound.rawValue{
@@ -96,7 +101,7 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
                 }
             }
         }
-
+        
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -104,28 +109,28 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
     
     func getImagePreview(completePost:CompletePost?,tableView:UITableView,indexPath:IndexPath,cell:UITableViewCell){
         if completePost?.post?.content?.mediaType == "TEXT" && /completePost?.post?.content?.lresId?.count <
-2{
-        if let firstUrl = self.getFirstUrl(completePost:completePost){
+            2{
+            if let firstUrl = self.getFirstUrl(completePost:completePost){
                 LKLinkPreviewReader.linkPreview(from: firstUrl.url) { (preview,error) in
                     if preview != nil{
-                    if ((preview?.first as! LKLinkPreview).imageURL != nil){
-                        completePost?.post?.content?.lresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
-                        completePost?.post?.content?.hresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
-                        tableView.reloadRows(at: [indexPath], with: .automatic)
-                    }
+                        if ((preview?.first as! LKLinkPreview).imageURL != nil){
+                            completePost?.post?.content?.lresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
+                            completePost?.post?.content?.hresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
+                            tableView.reloadRows(at: [indexPath], with: .automatic)
+                        }
                     }else{
-
+                        
                     }
                 }
-        }else{
-
-        }
+            }else{
+                
+            }
         }
     }
     func getFirstUrl(completePost:CompletePost?)-> NSTextCheckingResult?{
         do{
             let dataDetector = try NSDataDetector.init(types: NSTextCheckingResult.CheckingType.link.rawValue)
-            let firstMatch = dataDetector.firstMatch(in: /completePost?.post?.content?.descriptionField, options: [], range: NSRange(location: 0, length: /completePost?.post?.content!.descriptionField?.utf16.count))
+            let firstMatch = dataDetector.firstMatch(in: /completePost?.post?.content?.postText, options: [], range: NSRange(location: 0, length: /completePost?.post?.content!.postText?.utf16.count))
             return firstMatch
         }
         catch {

@@ -61,7 +61,7 @@ class dateTimeUtil{
              return "\(minutes) \(hoursDurationString) ago"
          }
         
-        return nil
+        return "Just now"
     }
     
     class func getTimeForComment(forComment time: String?) ->  String?{
@@ -108,7 +108,7 @@ class dateTimeUtil{
              return "\(minutes) \(hoursDurationString) ago"
          }
         
-        return nil
+        return "Just now"
     }
 
 }

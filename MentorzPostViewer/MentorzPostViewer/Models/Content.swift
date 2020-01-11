@@ -13,7 +13,7 @@ import ObjectMapper
 class PostContent : NSObject, Mappable{
 
     var contentId : Int?
-    @UTFEncodeAndDecode var descriptionField : String?
+    @UTFEncodeAndDecode var postText : String?
     var hresId : String?
     var lresId : String?
     var mediaType : String?
@@ -31,7 +31,7 @@ class PostContent : NSObject, Mappable{
     func mapping(map: Map)
     {
         contentId <- map["content_id"]
-        descriptionField <- map["description"]
+        postText <- map["description"]
         hresId <- map["hres_id"]
         lresId <- map["lres_id"]
         mediaType <- map["media_type"]

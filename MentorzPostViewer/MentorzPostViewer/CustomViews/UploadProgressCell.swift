@@ -12,13 +12,13 @@ class UploadProgressCell: UITableViewCell {
     
     @IBOutlet weak var percentageCompleted: UILabel!
     @IBOutlet weak var view: UIView!
+    
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var currentProgress: UIProgressView!
-    var delegate = MulticastDelegate<PostUploadCancelled>()
+    var delegate : PostUploadCancelled?
     var uploadCancelled: (()->())?
     @IBAction func close(_ sender: Any) {
-        delegate.invoke { (delegate) in
-            delegate.uploadCancelled()
-        }
+        delegate?.uploadCancelled()
         uploadCancelled?()
     }
 
@@ -34,6 +34,11 @@ class UploadProgressCell: UITableViewCell {
         self.currentProgress.progress = 0.0
     }
 
+    func setUpView(){
+        self.view.backgroundColor = UIColor.appColor
+        self.containerView.layer.borderWidth = 1
+        self.containerView.layer.borderColor = UIColor.borderColor
+    }
     
     func setShadow(color : UIColor ,opacity:Float ,radius : CGFloat ,offset:CGSize){
         self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
