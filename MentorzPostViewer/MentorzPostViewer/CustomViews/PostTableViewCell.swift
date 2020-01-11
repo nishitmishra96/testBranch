@@ -15,6 +15,11 @@ import TTTAttributedLabel
 import moa
 let RATING_ROUNDUP_MIN_VALUE = 0.2
 let RATING_ROUNDUP_MAX_VALUE = 0.7
+
+protocol PostTableViewCellDelegate{
+    func shouldRemoveCell(indexPath:IndexPath)
+    func reloadTableView(indexPath:IndexPath)
+}
 class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var viewWithProfileImage: UIView!
@@ -39,16 +44,20 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var fifthStar: UIImageView!
     @IBOutlet weak var readMore : UIButton!
     @IBOutlet weak var containerView:UIView!
-    var images : [UIImageView] = []
     @IBOutlet weak var userActivitiesStackView: UIStackView!
     @IBOutlet weak var viewWithImageAndButton: UIView!
     @IBOutlet weak var viewWithImageAndButtonHeight: NSLayoutConstraint!
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var readMoreButtonHeight: NSLayoutConstraint!
+    
+    var images : [UIImageView] = []
     var didTapOnImageView:((_ imageurl:String)->())?
     var didTapOnVideoPlay:((_ videoUrl:String)->())?
+//    TODO: remove this
     var delegate : UserActivities?
+    var cellDelegate:PostTableViewCellDelegate?
+    var indexPath:IndexPath = IndexPath()
     weak var completePost:CompletePost?
     var url : URL?
     var userId : String?
@@ -158,7 +167,10 @@ class PostTableViewCell: UITableViewCell {
         }else if self.completePost?.post?.content?.mediaType == "VIDEO"{
             self.playButton.setImage(UIImage(named:"play"), for: .normal)
         }else if self.completePost?.post?.content?.mediaType == "TEXT"{
-
+            if let imageURL = self.completePost?.getURLEmbeddedInPost()?.url{
+                self.mainPostImage.isHidden = false
+                self.setURLLinkPreview(url: imageURL)
+            }
         }
         self.timeOfPost.text = dateTimeUtil.getTimeDutation(forPost:"\(/completePost?.post?.shareTime)")
         if postText.isTruncated{
@@ -167,7 +179,17 @@ class PostTableViewCell: UITableViewCell {
             self.readMore.isHidden = false
         }
     }
-    
+    private func setURLLinkPreview(url:URL){
+            LKLinkPreviewReader.linkPreview(from: url) { (preview,error) in
+                if preview != nil{
+                    if ((preview?.first as! LKLinkPreview).imageURL != nil){
+                        self.completePost?.post?.content?.lresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
+                        self.completePost?.post?.content?.hresId = (preview?.first as! LKLinkPreview).imageURL?.absoluteString
+                        self.cellDelegate?.reloadTableView(indexPath: self.indexPath)
+                    }
+                }
+        }
+    }
     func setProfieImage(completePost:CompletePost){
         completePost.getProfileImage { (urlString,statusCode) in
             if statusCode == HttpResponseCodes.success.rawValue{
@@ -185,17 +207,6 @@ class PostTableViewCell: UITableViewCell {
         viewWithImageAndButtonHeight.constant = self.viewWithImageAndButton.frame.width
     }
     
-    func getFirstUrl()-> NSTextCheckingResult?{
-        do{
-            let dataDetector = try NSDataDetector.init(types: NSTextCheckingResult.CheckingType.link.rawValue)
-            let firstMatch = dataDetector.firstMatch(in: /completePost?.post?.content?.postText, options: [], range: NSRange(location: 0, length: /completePost?.post?.content!.postText?.utf16.count))
-            return firstMatch
-        }
-        catch {
-            print("No Links")
-        }
-        return nil
-    }
     func setRatingwith(completePost:CompletePost){
         completePost.getRating() { (rating,statusCode) in
             if statusCode == HttpResponseCodes.success.rawValue{
@@ -224,10 +235,18 @@ class PostTableViewCell: UITableViewCell {
         let alertController = UIAlertController.init(title: "Report Abuse?", message: nil, preferredStyle: .actionSheet)
 
         let inappropriateContent = UIAlertAction(title: "Inappropriate Content", style: .destructive) { (action) in
-            self.delegate?.userReportedAPostWith(post: (self.completePost?.post)!, type: "InAppropriateContent")
+            self.completePost?.userReportedAPostWith(type: "InAppropriateContent", handler: { (result) in
+                if (result){
+                self.cellDelegate?.shouldRemoveCell(indexPath: self.indexPath)
+                }
+            })
         }
         let spam = UIAlertAction(title: "Spam", style: .destructive) { (action) in
-            self.delegate?.userReportedAPostWith(post: (self.completePost?.post)!, type: "Spam")
+            self.completePost?.userReportedAPostWith(type: "Spam", handler: { (result) in
+                if result{
+                    self.cellDelegate?.shouldRemoveCell(indexPath: self.indexPath)
+                }
+            })
         }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(inappropriateContent)
@@ -263,21 +282,19 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func likeButtonPressed(_ sender: Any) {
             if completePost?.post?.liked ?? false{
                 self.clickedLikeWhenAlreadyLiked()
-                delegate?.userUnLiked(postId: /self.completePost?.post?.postId){ (done) in
-                    if done{
-                    }else{
+                self.completePost?.unLikePost(handler: { (done) in
+                    if !done{
                         self.clickedLikeWhenAleadyDisliked()
                     }
-                }
+                })
             }else{
                 self.clickedLikeWhenAleadyDisliked()
-                delegate?.userLiked(postId: /completePost?.post?.postId){ (done) in
-                    if done{}else{
+                self.completePost?.likedPost(handler: { (done) in
+                    if !done{
                         self.clickedLikeWhenAlreadyLiked()
                     }
-                }
-                }
-
+                })
+        }
     }
     
     func clickedLikeWhenAlreadyLiked(){

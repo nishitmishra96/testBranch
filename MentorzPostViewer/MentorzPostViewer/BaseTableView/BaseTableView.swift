@@ -24,7 +24,7 @@ public class BaseTableView: PagingTableView {
         setUp()
     }
     
-    func setUp(){
+    private func setUp(){
         self.register(UINib.init(nibName: "PostTableViewCell", bundle: Bundle.init(identifier: "com.craterzone.MentorzPostViewer")), forCellReuseIdentifier: "PostTableViewCell")
         self.register(UINib.init(nibName: "UploadProgressCell", bundle: Bundle.init(identifier: "com.craterzone.MentorzPostViewer")), forCellReuseIdentifier: "UploadProgressCell")
         self.refreshControl = UIRefreshControl()
@@ -38,5 +38,14 @@ public class BaseTableView: PagingTableView {
         self.refreshControl?.beginRefreshing()
     }
     
-
+    func updateTableViewForNewAppendedData(oldList: Int, newList: Int) {
+        self.beginUpdates()
+        var indexes = [IndexPath]()
+        for count in 0..<(newList - oldList){
+            let indexpath = IndexPath(row: (oldList - 1) + count, section: 0)
+            indexes.append(indexpath)
+        }
+        self.insertRows(at: indexes, with: .none)
+        self.endUpdates()
+    }
 }

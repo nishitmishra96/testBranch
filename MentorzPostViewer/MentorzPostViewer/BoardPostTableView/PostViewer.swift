@@ -311,7 +311,6 @@ extension BoardPostTableView:UploadPostDelegate{
 
 extension BoardPostTableView : PostUploadCancelled{
     func uploadCancelled() {
-//        self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         self.dataSourceTableView?.uploadingNewPost = false
         self.reloadSections(IndexSet(integersIn: 0...0), with: UITableView.RowAnimation.top)    }
 }

@@ -42,6 +42,8 @@
 		949BF4C423AA5F5C00F4E621 /* GoogleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949BF4C323AA5F5C00F4E621 /* GoogleURL.swift */; };
 		94A19205237D6C06001CB7A8 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A19203237D6C06001CB7A8 /* PostTableViewCell.swift */; };
 		94A4AD7023C9BC2300138F1C /* PostViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A4AD6F23C9BC2300138F1C /* PostViewer.swift */; };
+		94A4AD7223C9FCAA00138F1C /* BoardPostUITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A4AD7123C9FCAA00138F1C /* BoardPostUITableView.swift */; };
+		94A4AD7523C9FDEE00138F1C /* BoardPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A4AD7423C9FDEE00138F1C /* BoardPostController.swift */; };
 		94B2E7AD237AEDF800FF797B /* MentorzPostViewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94B2E7A3237AEDF800FF797B /* MentorzPostViewer.framework */; };
 		94B2E7B2237AEDF800FF797B /* MentorzPostViewerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2E7B1237AEDF800FF797B /* MentorzPostViewerTests.swift */; };
 		94B2E7B4237AEDF800FF797B /* MentorzPostViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = 94B2E7A6237AEDF800FF797B /* MentorzPostViewer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -112,6 +114,8 @@
 		949BF4C323AA5F5C00F4E621 /* GoogleURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleURL.swift; sourceTree = "<group>"; };
 		94A19203237D6C06001CB7A8 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		94A4AD6F23C9BC2300138F1C /* PostViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewer.swift; sourceTree = "<group>"; };
+		94A4AD7123C9FCAA00138F1C /* BoardPostUITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPostUITableView.swift; sourceTree = "<group>"; };
+		94A4AD7423C9FDEE00138F1C /* BoardPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPostController.swift; sourceTree = "<group>"; };
 		94B2E7A3237AEDF800FF797B /* MentorzPostViewer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MentorzPostViewer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		94B2E7A6237AEDF800FF797B /* MentorzPostViewer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MentorzPostViewer.h; sourceTree = "<group>"; };
 		94B2E7A7237AEDF800FF797B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -244,6 +248,15 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
+		94A4AD7323C9FD1000138F1C /* BoardPost */ = {
+			isa = PBXGroup;
+			children = (
+				94A4AD7123C9FCAA00138F1C /* BoardPostUITableView.swift */,
+				94A4AD7423C9FDEE00138F1C /* BoardPostController.swift */,
+			);
+			path = BoardPost;
+			sourceTree = "<group>";
+		};
 		94B2E799237AEDF800FF797B = {
 			isa = PBXGroup;
 			children = (
@@ -267,6 +280,7 @@
 		94B2E7A5237AEDF800FF797B /* MentorzPostViewer */ = {
 			isa = PBXGroup;
 			children = (
+				94A4AD7323C9FD1000138F1C /* BoardPost */,
 				94B517E423C8849B0096E152 /* Fonts */,
 				942F36862397ED12006B5350 /* CommentTableView */,
 				94F6439E2393004F005E7976 /* Assets.xcassets */,
@@ -495,6 +509,7 @@
 				945014BD23ACB4AC0078491A /* ContentToUpload.swift in Sources */,
 				94B517DF23C8430A0096E152 /* MentorzPostViewer.swift in Sources */,
 				94A19205237D6C06001CB7A8 /* PostTableViewCell.swift in Sources */,
+				94A4AD7523C9FDEE00138F1C /* BoardPostController.swift in Sources */,
 				940AB3D1238FA2ED00EBADC4 /* ProfilePostViewerDataSource.swift in Sources */,
 				94C8FF0223900198004B702D /* InterestTableView.swift in Sources */,
 				945549382399AB46002F755F /* UIlabel.swift in Sources */,
@@ -522,6 +537,7 @@
 				945014BF23ACB54F0078491A /* NewPost.swift in Sources */,
 				940AB3D4238FA37100EBADC4 /* BaseTableView.swift in Sources */,
 				942F367B2397A235006B5350 /* CompletePosts.swift in Sources */,
+				94A4AD7223C9FCAA00138F1C /* BoardPostUITableView.swift in Sources */,
 				94E8B2F82398DCD700D5699A /* CommentTableView.swift in Sources */,
 				942F36852397E773006B5350 /* CommentList.swift in Sources */,
 				94C8FF04239001CC004B702D /* InterestTableViewDataSource.swift in Sources */,
