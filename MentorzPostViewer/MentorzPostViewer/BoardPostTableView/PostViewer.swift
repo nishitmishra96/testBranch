@@ -219,7 +219,6 @@ extension BoardPostTableView:UploadPostDelegate{
                     self.beginUpdates()
                     self.insertRows(at: [IndexPath(row: 0, section: 1)], with: .bottom)
                     self.endUpdates()
-//                    (self.cellForRow(at: IndexPath(row: 0, section: 0)) as? PostTableViewCell)?.setData(cellPost: CompletePost(post: newPostToShow))
                 }
                 
             }else{
@@ -312,8 +311,9 @@ extension BoardPostTableView:UploadPostDelegate{
 
 extension BoardPostTableView : PostUploadCancelled{
     func uploadCancelled() {
-        self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-    }
+//        self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+        self.dataSourceTableView?.uploadingNewPost = false
+        self.reloadSections(IndexSet(integersIn: 0...0), with: UITableView.RowAnimation.top)    }
 }
 
 extension BoardPostTableView {

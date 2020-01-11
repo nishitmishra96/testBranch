@@ -133,7 +133,7 @@ public class UploadTaskManager:NSObject{
         var selectedImage : UIImage?
         var imageName : String?
         var imageDataToBeUploaded : Data?
-        selectedImage = self.videoSnapshot(filePathLocal: videoFileUrl.absoluteString)
+        selectedImage = self.getVideoThumbnail(filePathLocal: videoFileUrl.absoluteString)
         if let image = (videoFileUrl as? URL){
             mimeType = image.pathExtension.lowercased()
             imageName = image.lastPathComponent + "THUMB"
@@ -173,7 +173,7 @@ public class UploadTaskManager:NSObject{
             }
         }
     }
-    func videoSnapshot(filePathLocal: String) -> UIImage? {
+    func getVideoThumbnail(filePathLocal: String) -> UIImage? {
         let vidURL = URL(fileURLWithPath:filePathLocal as String)
         let asset = AVURLAsset(url: vidURL)
         let generator = AVAssetImageGenerator(asset: asset)
