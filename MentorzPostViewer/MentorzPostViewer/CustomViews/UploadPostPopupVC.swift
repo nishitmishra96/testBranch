@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UploadPostVC: UIViewController {
+class UploadPostPopupVC: UIViewController {
     @IBOutlet weak var contentView: UIView!
     
     @IBOutlet weak var descriptionField: UITextField!
@@ -52,7 +52,7 @@ class UploadPostVC: UIViewController {
 }
 
 
-extension UploadPostVC:UITextFieldDelegate{
+extension UploadPostPopupVC:UITextFieldDelegate{
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let maxLength = 140

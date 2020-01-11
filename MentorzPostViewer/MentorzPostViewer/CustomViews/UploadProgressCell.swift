@@ -14,10 +14,12 @@ class UploadProgressCell: UITableViewCell {
     @IBOutlet weak var view: UIView!
     @IBOutlet weak var currentProgress: UIProgressView!
     var delegate = MulticastDelegate<PostUploadCancelled>()
+    var uploadCancelled: (()->())?
     @IBAction func close(_ sender: Any) {
         delegate.invoke { (delegate) in
             delegate.uploadCancelled()
         }
+        uploadCancelled?()
     }
 
     override public func layoutSubviews() {

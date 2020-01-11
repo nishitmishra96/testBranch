@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SVProgressHUD
 import IQKeyboardManager
 class CommentViewVC: UIViewController {
    
@@ -33,9 +32,9 @@ class CommentViewVC: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     @IBAction func postButtonPressed(_ sender: Any) {
-        SVProgressHUD.show()
+        MentorzPostViewer.shared.delegate?.handleProgressHUD(shouldShow: true)
         PostsRestManager.shared.userCommentedOnAPost(userId: /self.tableView.dataSourceTableView?.userId, postId: /self.tableView.dataSourceTableView?.postId, comment: /self.CommentTextField.text) { (statusCode) in
-            SVProgressHUD.dismiss()
+            MentorzPostViewer.shared.delegate?.handleProgressHUD(shouldShow: false)
             if statusCode == HttpResponseCodes.success.rawValue{
                 self.CommentTextField.text = ""
                 self.tableView.dataSourceTableView?.getCommentForPost(tableView: self.tableView, to: self.tableView.currentPage)

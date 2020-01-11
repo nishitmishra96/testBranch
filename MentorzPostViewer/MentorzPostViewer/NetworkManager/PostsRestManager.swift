@@ -14,7 +14,6 @@ import LinkPreviewKit
 
 class PostsRestManager:NSObject{
     let cache = NSCache<NSString, ProfileImage>()
-    let urlCache = NSCache<NSString,NSString>()
     static var shared = PostsRestManager()
     private var postProvider = MoyaProvider<ApiCollection>()
     func getPosts(userId:String,pageNumber:Int,handler: @escaping ((PostList?,Int)->(Void))){
@@ -32,8 +31,9 @@ class PostsRestManager:NSObject{
                     print("Not Done")
                     handler(nil,result.statusCode)
                 }
-
+                
             case .failure( _):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(nil,response.error?.response?.statusCode ?? HttpResponseCodes.SomethingWentWrong.rawValue)
             }
         }
@@ -49,10 +49,12 @@ class PostsRestManager:NSObject{
                     handler(PostList(JSON: responseDic ?? [:]),result.statusCode)
                 }
                 catch{
+                    
                     handler(nil,result.statusCode)
                 }
-
+                
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(nil,error.response?.statusCode ?? HttpResponseCodes.SomethingWentWrong.rawValue)
             }
         }
@@ -63,9 +65,14 @@ class PostsRestManager:NSObject{
         
         postProvider.request(.likeAPost(postId: postId, userId: userId)) { (response) in
             switch response{
-            case .success(let _):
-                handler(true)
+            case .success(let result):
+                if result.response?.statusCode == HttpResponseCodes.NoContent.rawValue{
+                    handler(true)
+                }else{
+                    handler(false)
+                }
             case .failure(let _):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(false)
             }
         }
@@ -75,8 +82,13 @@ class PostsRestManager:NSObject{
         postProvider.request(.unlikeAPost(postId: postId, userId: userId)) { (response) in
             switch response{
             case .success(let result):
-                handler(true)
+                if result.response?.statusCode == HttpResponseCodes.NoContent.rawValue{
+                    handler(true)
+                }else{
+                    handler(false)
+                }
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(false)
             }
         }
@@ -88,13 +100,14 @@ class PostsRestManager:NSObject{
             case .success(let result):
                 handler(result.statusCode)
             case .failure(let error):
-                handler(309)
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+                handler(/response.error?.response?.statusCode)
             }
         }
     }
     
     func getPostOnUserInterest(userId:String,interestString:String,pageNumber:Int,handler:@escaping (PostList?,Int)->(Void)){
-            
+        
         postProvider.request(.getPostByInterest(userId: userId, interestString: interestString, pageNumber: pageNumber)) { (response) in
             switch response{
             case .success( let result):
@@ -107,8 +120,9 @@ class PostsRestManager:NSObject{
                     print("Not Done")
                     handler(nil,result.statusCode)
                 }
-
+                
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(nil,/error.response?.statusCode)
             }
         }
@@ -119,8 +133,10 @@ class PostsRestManager:NSObject{
             print(response)
             switch response{
             case .success( let result):
-                    handler(/result.statusCode)
+                handler(/result.statusCode)
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+                
                 handler(/error.response?.statusCode)
             }
         }
@@ -130,8 +146,9 @@ class PostsRestManager:NSObject{
         postProvider.request(.viewPost(userId: /userId, postId: /postId)) { (response) in
             switch response{
             case .success( let result):
-                    handler(/result.statusCode)
+                handler(/result.statusCode)
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(/error.response?.statusCode)
             }
         }
@@ -149,6 +166,7 @@ class PostsRestManager:NSObject{
                     handler(nil,result.statusCode)
                 }
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(nil,/error.response?.statusCode)
             }
         }
@@ -162,7 +180,7 @@ class PostsRestManager:NSObject{
             return
         }
         postProvider.request(.getProfileImage(userId: userId)) { (response) in
-        switch response{
+            switch response{
             case .success(let result):
                 do{
                     let responseString = try result.mapString()
@@ -175,6 +193,8 @@ class PostsRestManager:NSObject{
                     handler(nil,HttpResponseCodes.SomethingWentWrong.rawValue)
                 }
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+                
                 handler(nil,error.response?.statusCode)
             }
         }
@@ -190,8 +210,10 @@ class PostsRestManager:NSObject{
                 }catch{
                     handler(nil,HttpResponseCodes.SomethingWentWrong.rawValue)
                 }
-                case .failure(let error):
-                    handler(nil,error.response?.statusCode)
+            case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+                
+                handler(nil,error.response?.statusCode)
             }
         }
     }
@@ -202,6 +224,8 @@ class PostsRestManager:NSObject{
             case .success(let result):
                 handler(result.statusCode)
             case .failure(let error):
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+                
                 handler(error.response?.statusCode)
             }
         }
@@ -219,6 +243,7 @@ class PostsRestManager:NSObject{
                     handler("",HttpResponseCodes.SomethingWentWrong.rawValue)
                 }
             case .failure(let error) :
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler("",error.response?.statusCode)
             }
         }
@@ -235,6 +260,7 @@ class PostsRestManager:NSObject{
                     handler("",HttpResponseCodes.SomethingWentWrong.rawValue)
                 }
             case .failure(let error) :
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler("",error.response?.statusCode)
             }
         }
@@ -251,6 +277,7 @@ class PostsRestManager:NSObject{
                     handler(Post(),HttpResponseCodes.SomethingWentWrong.rawValue)
                 }
             case .failure(let error) :
+                MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(Post(),/error.response?.statusCode)
             }
         }

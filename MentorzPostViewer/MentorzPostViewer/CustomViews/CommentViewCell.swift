@@ -9,7 +9,6 @@
 import UIKit
 import TTTAttributedLabel
 import SDWebImage
-import SVProgressHUD
 class CommentViewCell: UITableViewCell {
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var commentMessage: TTTAttributedLabel!
@@ -25,15 +24,15 @@ class CommentViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     @IBAction func deleteComment(_ sender: Any) {
-        SVProgressHUD.show()
+        MentorzPostViewer.shared.delegate?.handleProgressHUD(shouldShow: true)
         PostsRestManager.shared.deleteCommentWith(userId: "\(/comment?.comment?.userId)", postId: "\(/self.postId)", commentId: "\(/self.comment?.comment?.commentId)"){(statusCode) in
-            SVProgressHUD.dismiss()
+            MentorzPostViewer.shared.delegate?.handleProgressHUD(shouldShow: false)
             if statusCode == HttpResponseCodes.success.rawValue{
                 self.delegate?.userDeletedComment(completeComment: self.comment ?? CompleteComment())
             }else{
-                SVProgressHUD.showError(withStatus: "Something Went Wrong \(/statusCode)")
+                MentorzPostViewer.shared.delegate?.handleErrorMessage(error: "Something Went Wrong \(/statusCode)")
             }
         }
     }

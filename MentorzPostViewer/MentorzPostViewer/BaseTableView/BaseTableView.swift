@@ -9,7 +9,7 @@
 import UIKit
 import PagingTableView
 
-open class BaseTableView: PagingTableView {
+public class BaseTableView: PagingTableView {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUp()
@@ -39,9 +39,4 @@ open class BaseTableView: PagingTableView {
     }
     
 
-}
-extension BaseTableView: UIImagePickerControllerDelegate , UINavigationControllerDelegate{
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-    }
 }

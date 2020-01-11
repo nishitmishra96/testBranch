@@ -59,7 +59,6 @@ class PostTableViewCell: UITableViewCell {
         if !(self.readMorePressed){
             self.postText.numberOfLines = 0
             self.postText.lineBreakMode = .byWordWrapping
-//            self.postText.text = self.completePost?.post?.content?.descriptionField
             self.readMore.setTitle("Read Less", for: .normal)
             delegate?.userPressedReadMore(post:self.completePost)
         }else{

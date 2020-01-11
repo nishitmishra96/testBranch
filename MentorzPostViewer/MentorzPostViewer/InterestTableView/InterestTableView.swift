@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-class InterestTableView:PostViewer{
+class InterestTableView:BoardPostTableView{
     
     override public func getPostsFor(userId: String) {
         self.dataSourceTableView = InterestTableViewDataSource()

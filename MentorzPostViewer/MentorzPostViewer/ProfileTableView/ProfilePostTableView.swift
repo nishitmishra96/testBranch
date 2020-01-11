@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-open class ProfilePostViewer:PostViewer{
+public class ProfilePostTableView:BoardPostTableView{
     override public func getPostsFor(userId: String) {
         self.dataSourceTableView = ProfilePostViewerDataSource(userId: userId)
         dataSourceTableView?.delegate = self

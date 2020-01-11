@@ -6,7 +6,6 @@
 //  Copyright © 2019 Nishit Mishra. All rights reserved.
 //
 import UIKit
-import SVProgressHUD
 import PagingTableView
 import ExpandableLabel
 open class CommentTableView:PagingTableView {

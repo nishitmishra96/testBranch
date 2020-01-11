@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import SVProgressHUD
 import PagingTableView
 import ExpandableLabel
 import Alamofire
 import Photos
 import MobileCoreServices
-open class PostViewer:BaseTableView {
+public class BoardPostTableView:BaseTableView {
     var dataSourceTableView : TableViewDataSource?
     var imagePicker : GalleryImagePicker?
     var currentlyPresentedVC:UIViewController?
@@ -45,13 +44,13 @@ open class PostViewer:BaseTableView {
         self.delegate = dataSourceTableView
     }
     open func reload() {
-        (self.dataSourceTableView as? TableViewDataSource)?.uploadingNewPost = localPost?.isUploading ?? false
+        (self.dataSourceTableView)?.uploadingNewPost = localPost?.isUploading ?? false
         self.reloadData()
     }
     
 }
 
-extension PostViewer:DataForBoard{
+extension BoardPostTableView:DataForBoard{
     func newCommentAppended(oldList: [CompleteComment], newList: [CompleteComment]) {
         self.beginUpdates()
         var indexes = [IndexPath]()
@@ -74,7 +73,7 @@ extension PostViewer:DataForBoard{
         self.endUpdates()
     }
     
-   @objc func reloadTableView() {
+   func reloadTableView() {
         self.reload()
     }
 
@@ -83,7 +82,7 @@ extension PostViewer:DataForBoard{
     }
 }
 
-extension PostViewer: UserActivities{
+extension BoardPostTableView: UserActivities{
     func reloadTableView(forPost: CompletePost?) {
         if let post = forPost?.post{
             let requiredCompletePost = self.dataSourceTableView?.getObjectOfCompletePostWith(post: post)
@@ -138,10 +137,10 @@ extension PostViewer: UserActivities{
                     self.deleteRows(at: [indexPath], with: .automatic)
                     self.endUpdates()
                 }else{
-                    SVProgressHUD.showError(withStatus: "Something Went Wrong \(statusCode!)")
+                    MentorzPostViewer.shared.delegate?.handleErrorMessage(error: "Something Went Wrong \(statusCode!)")
                 }
             }else{
-                SVProgressHUD.showError(withStatus: "Something Went Wrong \(statusCode!)")
+                MentorzPostViewer.shared.delegate?.handleErrorMessage(error: "Something Went Wrong \(statusCode!)")
             }
 
         }
@@ -160,20 +159,19 @@ extension PostViewer: UserActivities{
     }
     
     func userCommented(postId: Int) {
-//        self.userCommented(postId: postId)
     }
     
     @objc open func getImageFromGallery(){
-        let uploadPostVC = Storyboard.home.instanceOf(viewController: UploadPostVC.self)!
+        let uploadPostVC = Storyboard.home.instanceOf(viewController: UploadPostPopupVC.self)!
         UIApplication.shared.keyWindow?.rootViewController?.present(uploadPostVC, animated: true, completion: nil)
     }
 }
 
 
-extension PostViewer:AddPost{
+extension BoardPostTableView:AddPost{
     public func addPostbuttonClicked() {
         self.localPost = TextTypeLocalPost()
-        let uploadPostVC = Storyboard.home.instanceOf(viewController: UploadPostVC.self)!
+        let uploadPostVC = Storyboard.home.instanceOf(viewController: UploadPostPopupVC.self)!
         uploadPostVC.delegate = self
         self.currentlyPresentedVC = uploadPostVC
         let addToPlaylistAlert = UIAlertController(title: "Add Post", message: "", preferredStyle: .alert)
@@ -196,31 +194,31 @@ extension PostViewer:AddPost{
     }
 }
 
-extension PostViewer:UploadPostDelegate{
+extension BoardPostTableView:UploadPostDelegate{
     func imagePickerDissmissed() {
         self.localPost = nil
-        (self.currentlyPresentedVC as? UploadPostVC)?.constraintWithImageInvisible.constant = 4.0
+        (self.currentlyPresentedVC as? UploadPostPopupVC)?.constraintWithImageInvisible.constant = 4.0
     }
     
     func uploadContent() {
         self.localPost?.isUploading = true
-        (self.dataSourceTableView as? TableViewDataSource)?.uploadingNewPost = true
+        (self.dataSourceTableView)?.uploadingNewPost = true
         self.beginUpdates()
         self.insertRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         self.endUpdates()
         localPost?.delegate = self.cellForRow(at: IndexPath(row: 0, section: 0)) as! UploadProgressCell
-        localPost?.descriptionFieldText = "\(/(self.currentlyPresentedVC as! UploadPostVC).descriptionField.text)"
+        localPost?.descriptionFieldText = "\(/(self.currentlyPresentedVC as! UploadPostPopupVC).descriptionField.text)"
         
         UploadTaskManager.shared.uploadContent(localPost: self.localPost){(newPost,statusCode) in
             self.localPost?.isUploading = false
-            (self.dataSourceTableView as? TableViewDataSource)?.uploadingNewPost = false
+            (self.dataSourceTableView)?.uploadingNewPost = false
             if statusCode == HttpResponseCodes.success.rawValue{
                 if let newPostToShow = newPost{
                     self.beginUpdates()
                     self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
                     self.endUpdates()
                     self.beginUpdates()
-                    (self.dataSourceTableView as? TableViewDataSource)?.completePosts.insert(CompletePost(post: newPostToShow), at: 0)
+                    (self.dataSourceTableView)?.completePosts.insert(CompletePost(post: newPostToShow), at: 0)
                     self.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
                     self.endUpdates()
                     newPostToShow.content = newPostToShow.contents?.first
@@ -229,21 +227,24 @@ extension PostViewer:UploadPostDelegate{
                 
             }else{
                 self.uploadCancelled()
-                SVProgressHUD.showError(withStatus: "Something Went Wrong")
+                MentorzPostViewer.shared.delegate?.handleErrorMessage(error: "Something Went Wrong")
             }
+        }
+        (self.cellForRow(at: IndexPath(row: 0, section: 0)) as! UploadProgressCell).uploadCancelled = {
+            self.uploadCancelled()
         }
     }
     
     func donePressed(info: [UIImagePickerController.InfoKey : Any]) {
-        (self.currentlyPresentedVC as? UploadPostVC)?.constraintWithImageInvisible.constant = ((self.currentlyPresentedVC as? UploadPostVC)?.descriptionImage.frame.width ?? 0) + 8
+        (self.currentlyPresentedVC as? UploadPostPopupVC)?.constraintWithImageInvisible.constant = ((self.currentlyPresentedVC as? UploadPostPopupVC)?.descriptionImage.frame.width ?? 0) + 8
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage{
             localPost?.selectedImage = editedImage
 
         }else{
             localPost?.selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         }
-        (self.currentlyPresentedVC as? UploadPostVC)?.descriptionImage.isHidden = false
-        (self.currentlyPresentedVC as? UploadPostVC)?.descriptionImage.image = localPost?.selectedImage
+        (self.currentlyPresentedVC as? UploadPostPopupVC)?.descriptionImage.isHidden = false
+        (self.currentlyPresentedVC as? UploadPostPopupVC)?.descriptionImage.image = localPost?.selectedImage
           let imageURL = info[.imageURL]
           if let asset = info[.phAsset]{
               let assetResources = PHAssetResource.assetResources(for: (asset as! PHAsset))
@@ -291,7 +292,7 @@ extension PostViewer:UploadPostDelegate{
         self.localPost = VideoTypeLocalPost()
         localPost?.isImage = false
          do{
-            (self.currentlyPresentedVC as? UploadPostVC)?.constraintWithImageInvisible.constant = ((self.currentlyPresentedVC as? UploadPostVC)?.descriptionImage.frame.width ?? 0) + 8
+            (self.currentlyPresentedVC as? UploadPostPopupVC)?.constraintWithImageInvisible.constant = ((self.currentlyPresentedVC as? UploadPostPopupVC)?.descriptionImage.frame.width ?? 0) + 8
             
             if let videoFileURL = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL {
                 self.localPost?.videoFileURL = videoFileURL
@@ -303,10 +304,7 @@ extension PostViewer:UploadPostDelegate{
                     
                     print(assetResources.first!.originalFilename)
                 }
-                
-                if let image = (videoFileURL as? URL){
-                    localPost?.mimeType = image.pathExtension.lowercased()
-                }
+                    localPost?.mimeType = (videoFileURL as URL).pathExtension.lowercased()
             }
         }catch{
             print("Exception occured")
@@ -315,16 +313,15 @@ extension PostViewer:UploadPostDelegate{
     }
 }
 
-extension PostViewer : PostUploadCancelled{
+extension BoardPostTableView : PostUploadCancelled{
     func uploadCancelled() {
         self.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
     }
 }
 
-extension PostViewer : UISearchBarDelegate{
-    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-        (self.dataSourceTableView as? TableViewDataSource)?.filterPostString = searchBar.text
+extension BoardPostTableView {
+    public func localSearchinPosts(using string:String){
+        (self.dataSourceTableView)?.filterPostString = string
         reloadTableView()
     }
 }

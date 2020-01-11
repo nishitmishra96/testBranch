@@ -22,7 +22,6 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
         var completePostsWithFilter = [CompletePost]()
         init(userId:String) {
             self.userId = userId
-    //        postList.posts = []
             completePosts = []
         }
     convenience override init(){
@@ -74,7 +73,7 @@ class TableViewDataSource:NSObject, UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if uploadingNewPost {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "UploadProgressCell", for: indexPath) as! UploadProgressCell
-                cell.delegate.add(tableView as! PostViewer)
+                cell.delegate.add(tableView as! BoardPostTableView)
                 cell.delegate.add(UploadTaskManager.shared)
             return cell
             }
