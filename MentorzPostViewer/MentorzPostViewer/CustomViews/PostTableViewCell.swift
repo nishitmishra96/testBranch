@@ -19,6 +19,7 @@ let RATING_ROUNDUP_MAX_VALUE = 0.7
 protocol PostTableViewCellDelegate{
     func shouldRemoveCell(indexPath:IndexPath)
     func reloadTableView(indexPath:IndexPath)
+    func updateLayout(indexPath:IndexPath)
 }
 class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var baseView: UIView!
@@ -71,14 +72,16 @@ class PostTableViewCell: UITableViewCell {
             self.postText.numberOfLines = 0
             self.postText.lineBreakMode = .byWordWrapping
             self.readMore.setTitle("Read Less", for: .normal)
-            delegate?.userPressedReadMore(post:self.completePost)
         }else{
             self.postText.numberOfLines = 2
             self.postText.lineBreakMode = .byTruncatingTail
             self.readMore.setTitle("Read More", for: .normal)
-            delegate?.userPressedReadLess(post:self.completePost)
+//            delegate?.userPressedReadButton(post:self.completePost)
         }
         self.layoutIfNeeded()
+//        self.layoutSubviews()
+//        super.updateConstraints()
+        cellDelegate?.updateLayout(indexPath: indexPath)
         self.readMorePressed = !self.readMorePressed
     }
     
@@ -170,7 +173,7 @@ class PostTableViewCell: UITableViewCell {
             self.playButton.setImage(nil, for: .normal)
         }else if self.completePost?.post?.content?.mediaType == "VIDEO"{
             self.playButton.setImage(UIImage(named:"play"), for: .normal)
-        }else if self.completePost?.post?.content?.mediaType == "TEXT"{
+        }else if self.completePost?.post?.content?.mediaType == "TEXT" && /self.completePost?.post?.content?.hresId?.count < 2{
             if let imageURL = self.completePost?.getURLEmbeddedInPost()?.url{
                 self.mainPostImage.isHidden = false
                 self.setURLLinkPreview(url: imageURL)
@@ -261,9 +264,10 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func didTapOnImage(_ sender: UIButton) {
         if self.completePost?.post?.content?.mediaType == "IMAGE"{
             let imageViewer = Storyboard.home.instanceOf(viewController: ImageViewerVC.self)!
-            imageViewer.url = URL(string: completePost?.post?.content?.hresId ?? "")
             imageViewer.modalPresentationStyle = .fullScreen
-            UIApplication.shared.keyWindow?.rootViewController?.present(imageViewer, animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.rootViewController?.present(imageViewer, animated: true){
+                imageViewer.imageView.image = self.mainPostImage.image
+            }
 
         }else if self.completePost?.post?.content?.mediaType == "TEXT" {
             let imageViewer = Storyboard.home.instanceOf(viewController: ImageViewerVC.self)!

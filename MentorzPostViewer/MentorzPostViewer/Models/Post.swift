@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 
-class Post : NSObject, Mappable{
+public class Post : NSObject, Mappable{
 
     var commentCount : Int?
     var content : PostContent?
@@ -33,7 +33,7 @@ class Post : NSObject, Mappable{
         
     }
 
-    func mapping(map: Map)
+    public func mapping(map: Map)
     {
         commentCount <- map["comment_count"]
         content <- map["content"]

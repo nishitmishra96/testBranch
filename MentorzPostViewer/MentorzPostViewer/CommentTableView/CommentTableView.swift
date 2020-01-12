@@ -82,11 +82,7 @@ extension CommentTableView: UserActivities{
         
     }
     
-    func userPressedReadMore(post:CompletePost?) {
-        
-    }
-    
-    func userPressedReadLess(post:CompletePost?) {
+    func userPressedReadButton(post:CompletePost?) {
         
     }
     
@@ -100,15 +96,7 @@ extension CommentTableView: UserActivities{
         self.deleteRows(at: [indexPath], with: .automatic)
         self.endUpdates()
     }
-    
-    func userReportedAPostWith(post:Post, type: String) {
-    }
-    
-    func userUnLiked(postId: Int, handler: @escaping ((Bool) -> ())) {
-    }
-    
-    func userLiked(postId: Int, handler: @escaping ((Bool) -> ())) {
-    }
+
     
     func userCommented(postId: Int) {
 //        self.userCommented(postId: postId)

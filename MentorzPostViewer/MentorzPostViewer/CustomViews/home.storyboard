@@ -27,9 +27,15 @@
                                     <constraint firstAttribute="height" constant="44" id="2IM-qp-iGr"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem systemItem="done" id="eTh-tb-9hF">
+                                    <barButtonItem systemItem="cancel" id="eTh-tb-9hF">
                                         <connections>
-                                            <action selector="donePressed:" destination="mhZ-rf-aOe" id="rfy-fb-Bds"/>
+                                            <action selector="cancelPressed:" destination="mhZ-rf-aOe" id="04v-AI-Zcr"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="273" style="plain" systemItem="fixedSpace" id="B4R-TH-QGy"/>
+                                    <barButtonItem systemItem="done" id="xgn-7F-5gP">
+                                        <connections>
+                                            <action selector="donePressed:" destination="mhZ-rf-aOe" id="vpG-Uc-pAt"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>

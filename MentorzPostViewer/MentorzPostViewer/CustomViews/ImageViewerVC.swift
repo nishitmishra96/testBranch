@@ -14,13 +14,19 @@ open class ImageViewerVC: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     var image = UIImageView()
     var url : URL?
+    var delegate:ImagePickerDelegate?
     override open func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
     }
     
+    @IBAction func cancelPressed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+        delegate?.imagePickerDissmissed()
+    }
     @IBAction func donePressed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+            delegate?.donePressed()
     }
     func initialSetup(){
         imageView.isUserInteractionEnabled = true
@@ -36,16 +42,19 @@ open class ImageViewerVC: UIViewController {
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.loadImage(url: url)
+        self.scrollView.contentSize = CGSize.init(width: self.image.frame.width, height: self.image.frame.height)
     }
     
     func loadImage(url: URL?){
-        self.image.sd_setImage(with: url) { (image, error, cache, url) in
-            if let _ = image{
-                self.imageView.image = image
-            }else{
-                self.imageView.image = UIImage(named:"loading_data_logo")
+        if let _ = url{
+            self.image.sd_setImage(with: url) { (image, error, cache, url) in
+                if let _ = image{
+                    self.imageView.image = image
+                }else{
+                    self.imageView.image = UIImage(named:"loading_data_logo")
+                }
+                self.scrollView.contentSize = CGSize.init(width: self.image.frame.width, height: self.image.frame.height)
             }
-            self.scrollView.contentSize = CGSize.init(width: self.image.frame.width, height: self.image.frame.height)
         }
     }
 

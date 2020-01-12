@@ -16,13 +16,9 @@ protocol DataForBoard {
 
 
 protocol UserActivities{
-    func userLiked(postId:Int,handler:@escaping ((Bool)->()))
-    func userUnLiked(postId:Int,handler:@escaping ((Bool)->()))
     func userCommented(postId:Int)
     func userDeletedComment(completeComment:CompleteComment)
-    func userReportedAPostWith(post: Post,type:String)
-    func userPressedReadMore(post:CompletePost?)
-    func userPressedReadLess(post:CompletePost?)
+    func userPressedReadButton(post:CompletePost?)
     func reloadTableView(forPost:CompletePost?)
 }
 
@@ -31,12 +27,8 @@ public protocol AddPost{
     func addPostbuttonClicked()
 }
 
-protocol UploadPostDelegate {
-    func imageSelected(info: [UIImagePickerController.InfoKey : Any])
-    func videoSelected(info: [UIImagePickerController.InfoKey : Any])
-    func openGallery(isVideo:Bool)
-//    func uploadContent()
-    func donePressed(info: [UIImagePickerController.InfoKey : Any])
+protocol ImagePickerDelegate {
+    func donePressed()
     func imagePickerDissmissed()
 }
 

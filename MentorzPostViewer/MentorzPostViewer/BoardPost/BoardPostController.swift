@@ -14,7 +14,6 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
     private weak var tableView:BaseTableView?
     private var boardPostOriginal:[CompletePost] = []
     private var postToShowOnUI:[CompletePost] = []
-    private var currentlyUploadingPost:[UITableViewCell] = []
     private var interest : [Int] = []
     private var restDataSource:RestDataSource?
     var filterPostString:String?{
@@ -56,7 +55,8 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return self.currentlyUploadingPost.count
+//            return /uploadPostManager?.currentlyUploadPost.count
+            return UploadPostManager.shared.request != nil ? 1 : 0
         }
         return self.postToShowOnUI.count
     }
@@ -64,6 +64,9 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0{
             let cell = tableView.dequeueReusableCell(withIdentifier: "UploadProgressCell", for: indexPath) as! UploadProgressCell
+            cell.indexPath = indexPath
+            cell.delegate = self
+            UploadPostManager.shared.delegate = cell
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as! PostTableViewCell
@@ -75,6 +78,14 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
     public func paginate(_ tableView: PagingTableView, to page: Int) {
         self.getPost(forPage: page)
     }
+    public func InsertNewRow(withPost:Post){
+        self.tableView?.reloadSections(IndexSet(integersIn: 0...0), with: UITableView.RowAnimation.top)
+        self.postToShowOnUI.insert(CompletePost(post: withPost), at: 0)
+        self.boardPostOriginal.insert(CompletePost(post: withPost), at: 0)
+        self.tableView?.beginUpdates()
+        self.tableView?.insertRows(at: [IndexPath(row: 0, section: 1)], with: .bottom)
+        self.tableView?.endUpdates()
+        }
 }
 extension PostController{
     func getPost(forPage:Int){
@@ -102,19 +113,29 @@ extension PostController{
     }
 }
 extension PostController:PostTableViewCellDelegate{
+    
     func shouldRemoveCell(indexPath: IndexPath) {
         if (indexPath.section != 0){
             self.tableView?.beginUpdates()
             self.boardPostOriginal = self.boardPostOriginal.filter { (post) -> Bool in
                 return (post.post?.postId != postToShowOnUI[indexPath.row].post?.postId)
             }
-            let filterDataString = self.filterPostString
-            self.filterPostString = filterDataString
             self.tableView?.deleteRows(at: [indexPath], with: .left)
             self.tableView?.endUpdates()
+        }else{
+            self.tableView?.beginUpdates()
+            self.tableView?.deleteRows(at: [indexPath], with: .automatic)
+            self.tableView?.endUpdates()
         }
+        let filterDataString = self.filterPostString
+        self.filterPostString = filterDataString
     }
     func reloadTableView(indexPath: IndexPath) {
         self.tableView?.reloadRows(at: [indexPath], with: .automatic)
+    }
+    func updateLayout(indexPath: IndexPath) {
+        self.tableView?.beginUpdates()
+        tableView?.cellForRow(at: indexPath)?.layoutIfNeeded()
+        self.tableView?.endUpdates()
     }
 }

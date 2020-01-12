@@ -14,7 +14,7 @@ class PreviewImage: UIViewController {
     var imageToDisplay:UIImage?
     var info: [UIImagePickerController.InfoKey : Any]?
     var originalImage : UIImage?
-    var delegate : UploadPostDelegate?
+    var delegate : ImagePickerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.image.image = imageToDisplay
@@ -23,7 +23,7 @@ class PreviewImage: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     @IBAction func doneButtonPressed(_ sender: Any) {
-        delegate?.donePressed(info: info ?? [:])
+//        delegate?.donePressed(info: info ?? [:])
         self.dismiss(animated: true, completion: nil)
     }
 }

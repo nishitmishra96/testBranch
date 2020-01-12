@@ -11,8 +11,7 @@ import UIKit
 import MobileCoreServices
 import Photos
 class GalleryImagePicker:NSObject{
-    var delegate : UploadPostDelegate?
-    func openAlbums(currentlyPresentedVC:UIViewController?,isVideo:Bool = false){
+    func openAlbums(currentlyPresentedVC:UploadPostPopupVC?,isVideo:Bool = false){
         let authorisationStatus = PHPhotoLibrary.authorizationStatus()
         switch authorisationStatus{
             case .authorized:
@@ -24,7 +23,7 @@ class GalleryImagePicker:NSObject{
             }
     }
     
-    func checkAuthorisation(currentlyPresentedVC:UIViewController?,isVideo:Bool = false){
+    func checkAuthorisation(currentlyPresentedVC:UploadPostPopupVC?,isVideo:Bool = false){
         PHPhotoLibrary.requestAuthorization { (authorisation) in
             if authorisation == .authorized{
                 self.presentImagePicker(currentlyPresentedVC:currentlyPresentedVC,isVideo: isVideo)
@@ -34,7 +33,7 @@ class GalleryImagePicker:NSObject{
         }
     }
     
-    func presentImagePicker(currentlyPresentedVC:UIViewController?,isVideo:Bool = false){
+    func presentImagePicker(currentlyPresentedVC:UploadPostPopupVC?,isVideo:Bool = false){
         let imagePickerController = UIImagePickerController()
         if /isVideo{
             imagePickerController.sourceType = .camera
@@ -44,28 +43,9 @@ class GalleryImagePicker:NSObject{
         }
         imagePickerController.allowsEditing = true
         imagePickerController.mediaTypes = [kUTTypeMovie as String,kUTTypeImage as String]
-        imagePickerController.delegate = self
+        imagePickerController.delegate = currentlyPresentedVC
+        imagePickerController.modalPresentationStyle = .fullScreen
         currentlyPresentedVC?.present(imagePickerController, animated: true, completion: nil)
         }
 }
 
-extension GalleryImagePicker : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
-    private func pickerController(_ controller: UIImagePickerController, didSelect image: UIImage?) {
-        controller.dismiss(animated: true, completion: nil)
-        delegate?.imagePickerDissmissed()
-    }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        print("Hey this is info : ",info)
-        let mediaType = info[UIImagePickerController.InfoKey.mediaType] as! CFString
-
-        switch mediaType {
-        case kUTTypeImage:
-            delegate?.imageSelected(info: info)
-        case kUTTypeMovie:
-            delegate?.videoSelected(info: info)
-        default:
-            break
-        }
-    }
-}
