@@ -13,7 +13,7 @@ class CommentViewVC: UIViewController {
     @IBOutlet weak var tableView: CommentTableView!
     @IBOutlet weak var CommentTextField: UITextField!
     @IBOutlet weak var messegeLabel: UILabel!
-    
+    var refreshCellCommentCount:((Int)->())?
     var dataSource : CommentTableViewDataSource?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +29,13 @@ class CommentViewVC: UIViewController {
         
     }
     @IBAction func backButtonPressed(_ sender: Any) {
+        let numberOfComments = self.tableView.numberOfRows(inSection: 0)
+        refreshCellCommentCount?(numberOfComments)
         self.dismiss(animated: true, completion: nil)
     }
     @IBAction func postButtonPressed(_ sender: Any) {
         MentorzPostViewer.shared.delegate?.handleProgressHUD(shouldShow: true)
-        PostsRestManager.shared.userCommentedOnAPost(userId: /self.tableView.dataSourceTableView?.userId, postId: /self.tableView.dataSourceTableView?.postId, comment: /self.CommentTextField.text) { (statusCode) in
+        PostsRestManager.shared.userCommentedOnAPost(userId: /MentorzPostViewer.shared.dataSource?.getUserId(), postId: /self.tableView.dataSourceTableView?.postId, comment: /self.CommentTextField.text) { (statusCode) in
             MentorzPostViewer.shared.delegate?.handleProgressHUD(shouldShow: false)
             if statusCode == HttpResponseCodes.success.rawValue{
                 self.CommentTextField.text = ""

@@ -22,6 +22,9 @@ public class BoardPostUITableView: BaseTableView {
         self.controller?.filterPostString = string
         self.reloadData()
     }
+    public func setupTableViewForProfile(user id:String){
+        self.controller = PostController(foruserProfile: id, base: self)
+    }
     public func setupTableViewForBoardPost(user id:String){
         self.controller = PostController(userid: id, base: self)
     }

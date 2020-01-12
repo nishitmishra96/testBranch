@@ -7,80 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3BC1B500-7DD1-4C14-80E2-56DE3C93E9FC"
-            shouldBeEnabled = "No"
+            uuid = "5DDBBCE8-147C-41D7-9F45-9872ADA6AC01"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MentorzPostViewer/MentorzPostViewer/BoardPost/BoardPostController.swift"
+            filePath = "abcd/abcd/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "getPost(forPage:)"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "handleUnsportedStatusCode(statusCode:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CBC57605-AF80-4FAE-8B50-0711EF9F7030"
+            uuid = "34B2D3D9-FF19-4E2C-A063-454582979F50"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MentorzPostViewer/MentorzPostViewer/BoardPost/BoardPostController.swift"
+            filePath = "abcd/abcd/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "getPostByInterests(pageNumber:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "CBC57605-AF80-4FAE-8B50-0711EF9F7030 - 3c78ed65865fbe0a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MentorzPostViewer.PostController.getPostByInterests(pageNumber: Swift.Int) -&gt; ()"
-                  moduleName = "MentorzPostViewer"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/nishitmishra/Documents/personal/MentorzTableViewModuleGit/MentorzPostViewer/MentorzPostViewer/BoardPost/BoardPostController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "97"
-                  endingLineNumber = "97"
-                  offsetFromSymbolStart = "901">
-               </Location>
-               <Location
-                  uuid = "CBC57605-AF80-4FAE-8B50-0711EF9F7030 - e9b90d6c4ddd04e6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;MentorzPostViewer.PostList&gt;, Swift.Int) -&gt; () in MentorzPostViewer.PostController.getPostByInterests(pageNumber: Swift.Int) -&gt; ()"
-                  moduleName = "MentorzPostViewer"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/nishitmishra/Documents/personal/MentorzTableViewModuleGit/MentorzPostViewer/MentorzPostViewer/BoardPost/BoardPostController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "98"
-                  endingLineNumber = "98"
-                  offsetFromSymbolStart = "309">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A58E7F0D-EF31-45B4-A963-B38968AE50BE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MentorzPostViewer/MentorzPostViewer/BoardPost/BoardPostController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "getPost(forPage:)"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "getUserId()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

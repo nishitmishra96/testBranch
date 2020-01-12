@@ -60,7 +60,11 @@ class PostTableViewCell: UITableViewCell {
     var indexPath:IndexPath = IndexPath()
     weak var completePost:CompletePost?
     var url : URL?
-    var userId : String?
+    var userId : String {
+        get {
+            return /MentorzPostViewer.shared.dataSource?.getUserId()
+        }
+    }
     var readMorePressed = false
     @IBAction func readMorePressed(_ sender: Any) {
         if !(self.readMorePressed){
@@ -320,6 +324,9 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func commentButtonPressed(_ sender: Any) {
         let commentVC = Storyboard.home.instanceOf(viewController: CommentViewVC.self)!
         commentVC.modalPresentationStyle = .fullScreen
+        commentVC.refreshCellCommentCount = { (count) in
+            self.commentCount.text = "\(count) comment"
+        }
         UIApplication.shared.keyWindow?.rootViewController?.present(commentVC, animated: true, completion:{
             commentVC.getCommentList(userId: self.userId, postId: "\(/self.completePost?.post?.postId)",comments: self.completePost?.comments)
         })
