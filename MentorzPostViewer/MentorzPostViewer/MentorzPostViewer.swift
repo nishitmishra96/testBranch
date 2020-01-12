@@ -16,6 +16,7 @@ import UIKit
 @objc public protocol MentorzPostViewerDatasource{
     func authToken()->String
     func getUserId()->String
+    func getUserAgent()->String
 }
 @objc public  class MentorzPostViewer: NSObject {
     @objc public static var shared = MentorzPostViewer()

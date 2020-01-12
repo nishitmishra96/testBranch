@@ -31,6 +31,8 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         self.userID = userid
         self.tableView = tableView
         super.init()
+        self.tableView?.dataSource = self
+        self.tableView?.delegate = self
         self.restDataSource = profileDataSource(user: self.userID)
     }
     init(userid:String,base tableView:BaseTableView){
@@ -39,6 +41,7 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         super.init()
         self.restDataSource = BoardPost(user: userid)
         self.tableView?.dataSource = self
+        self.tableView?.delegate = self
         self.getPost(forPage: 0)
     }
     init(userid:String,base tableView:BaseTableView,interestList:[Int]) {
@@ -48,6 +51,7 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         self.restDataSource = InterestDataSource(user: userid, InterestList: interestList)
         super.init()
         self.tableView?.dataSource = self
+        self.tableView?.delegate = self
         self.getPost(forPage: 0)
     }
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -74,6 +78,19 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         cell.indexPath =  indexPath
         cell.setData(cellPost: postToShowOnUI[indexPath.row])
         return cell
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if UploadPostManager.shared.request == nil && indexPath.section == 1{
+            PostsRestManager.shared.updatePostViewCount(userId: /MentorzPostViewer.shared.dataSource?.getUserId(), postId: "\(String(describing: /self.postToShowOnUI[indexPath.row].post?.postId))") { (statusCode) in
+                if statusCode == HttpResponseCodes.NotFound.rawValue{
+                    self.postToShowOnUI[indexPath.row].post?.viewCount = (self.postToShowOnUI[indexPath.row].post?.viewCount ?? 0) + 1
+                    (cell as! PostTableViewCell).viewCount.text = (/self.postToShowOnUI[indexPath.row].post?.viewCount > 1) ? "\(/self.postToShowOnUI[indexPath.row].post?.viewCount) views " : "\(/self.postToShowOnUI[indexPath.row].post?.viewCount) view"
+                    print("view count increased")
+                }else{
+                    print("view count not increased")
+                }
+            }
+        }
     }
     public func paginate(_ tableView: PagingTableView, to page: Int) {
         self.getPost(forPage: page)

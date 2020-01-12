@@ -158,7 +158,7 @@ class PostsRestManager:NSObject{
         }
     }
     
-    func updatePostViewCount(userId: String?, postId: String?,handler:@escaping ((Int?)->())){
+    func updatePostViewCount(userId: String, postId: String,handler:@escaping ((Int?)->())){
         postProvider.request(.viewPost(userId: /userId, postId: /postId)) { (response) in
             switch response{
             case .success( let result):
@@ -295,6 +295,18 @@ class PostsRestManager:NSObject{
             case .failure(let error) :
                 MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
                 handler(Post(),/error.response?.statusCode)
+            }
+        }
+    }
+    
+    func sharePost(postId:String,handler:@escaping ((Int)->())){
+        postProvider.request(.sharePost(postId: postId)) { (response) in
+            switch response{
+            case .success(let result): print("Success")
+            handler(result.statusCode)
+            case .failure(let error): print("Failure")
+            MentorzPostViewer.shared.delegate?.handleUnsportedStatusCode(statusCode: /response.error?.response?.statusCode)
+            handler(/error.response?.statusCode)
             }
         }
     }

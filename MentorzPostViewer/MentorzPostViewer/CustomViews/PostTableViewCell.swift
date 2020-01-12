@@ -351,15 +351,40 @@ class PostTableViewCell: UITableViewCell {
         let controller = UIActivityViewController(activityItems: objectstoshare, applicationActivities: nil)
         controller.setValue(caption, forKey: "Subject")
         UIApplication.shared.keyWindow?.rootViewController?.present(controller, animated: true, completion: nil)
+        controller.completionWithItemsHandler = {(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+            if !completed {
+                // User canceled
+                return
+            }
+            self.completePost?.sharePost(handler: { (result) in
+                if result{
+                self.shareCount.text = (/self.completePost?.post?.shareCount > 1) ? "\(/self.completePost?.post?.shareCount) shares":"\(/self.completePost?.post?.shareCount) share"
+                }
+            })
+        }
     }
     
     func sharePost(){
-        let caption:NSString = "Himanshu Singh"
+        let caption:NSString = self.postText?.text as! NSString
         let url = NSURL(string: "google.com")!
         let objectstoshare = [caption,url]
         let controller = UIActivityViewController(activityItems: objectstoshare, applicationActivities: nil)
+        controller.excludedActivityTypes = [UIActivity.ActivityType.postToWeibo,
+                                            UIActivity.ActivityType.print, UIActivity.ActivityType.copyToPasteboard,
+                                            UIActivity.ActivityType.assignToContact, UIActivity.ActivityType.saveToCameraRoll,
+                                            UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.postToFlickr,
+                                            UIActivity.ActivityType.postToVimeo, UIActivity.ActivityType.postToTencentWeibo,UIActivity.ActivityType.airDrop]
         controller.setValue(caption, forKey: "Subject")
+        controller.completionWithItemsHandler = {(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+            if !completed {
+                // User canceled
+                return
+            }else{
+                print("SHared")
+            }
+        }
         UIApplication.shared.keyWindow?.rootViewController?.present(controller, animated: true, completion: nil)
+
     }
 }
 

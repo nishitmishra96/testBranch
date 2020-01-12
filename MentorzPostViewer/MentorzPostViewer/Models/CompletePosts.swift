@@ -61,4 +61,14 @@ class CompletePost:NSObject{
 
         }
     }
+    func sharePost(handler:@escaping ((Bool)->())){
+        PostsRestManager.shared.sharePost(postId: "\(/self.post?.postId)") { (statusCode) in
+            if statusCode == HttpResponseCodes.NoContent.rawValue{
+                self.post?.shareCount = (self.post?.shareCount ?? 0) + 1
+                handler(true)
+            }else{
+                handler(false)
+            }
+        }
+    }
 }

@@ -28,12 +28,13 @@ enum ApiCollection{
     case getUploadSessionURI(name:String,mime:String)
     case getSignedURL(contentName:String)
     case uploadPost(userId:String,newPost:NewPost)
+    case sharePost(postId:String)
 }
 extension ApiCollection:TargetType{
     var headers: [String : String]? {
         switch self{
         case .getUploadSessionURI(_,let mime):
-            return ["Accept":"application/json","Content-Type":"image/\(mime)","user-agent":"hhhhh"]
+            return ["Accept":"application/json","Content-Type":"image/\(mime)","user-agent":/MentorzPostViewer.shared.dataSource?.getUserAgent()]
         default: return ["Accept":"application/json","Content-Type":"application/json","user-agent":"hhhhh","oauth-token":MentorzPostViewer.shared.dataSource?.authToken() ?? ""]
         }
         
@@ -85,6 +86,8 @@ extension ApiCollection:TargetType{
             return "/mentorz/api/v3/\(userId)/post"
         case .getPostByPostId(let userId, let postId):
             return "/mentorz/api/v3/\(userId)/post/\(postId)"
+        case .sharePost(let postId):
+            return "/mentorz/api/v3/\(/MentorzPostViewer.shared.dataSource?.getUserId())/post/\(postId)/share"
         }
     }
     
@@ -92,7 +95,7 @@ extension ApiCollection:TargetType{
         switch self {
         case .getPostByID,.getMyBoardPost,.getMyPosts,.getUserRating,.getPostByInterest,.getProfileImage,.getCommentList,.getUploadSessionURI,.getSignedURL,.getPostByPostId:
             return .get
-        case .likeAPost,.unlikeAPost,.reportAbuse,.viewPost:
+        case .likeAPost,.unlikeAPost,.reportAbuse,.viewPost,.sharePost:
             return .post
         case .commentOnAPost,.uploadPost:
             return .put
@@ -133,14 +136,16 @@ extension ApiCollection:TargetType{
             return .requestCompositeData(bodyData: Data(), urlParameters: ["pageNo":pageNumber])
         case .userDeletedComment(_, _, _):
             return .requestPlain
-        case .getUploadSessionURI(_, let mime):
+        case .getUploadSessionURI(_, let _):
             return .requestPlain
         case .getSignedURL(_):
             return .requestPlain
         case .uploadPost(_,let newPost):
             let dict = newPost.toJSON()
             return .requestCompositeParameters(bodyParameters: dict, bodyEncoding: JSONEncoding.default, urlParameters: [:])
-        case .getPostByPostId(let userId, let postId):
+        case .getPostByPostId(let _, let _):
+            return .requestPlain
+        case .sharePost(let _):
             return .requestPlain
         }
     }
