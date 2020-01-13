@@ -64,3 +64,21 @@ class InterestDataSource:RestDataSource{
         }
     }
 }
+
+class PostDataSource:RestDataSource{
+    private var userid:String
+    private var postid:String
+    init(user id:String,postId:String){
+        self.userid = id
+        self.postid = postId
+    }
+    func getPost(forPage: Int, handler: @escaping (([CompletePost]?, Int) -> ())) {
+        PostsRestManager.shared.getPostByPostId(userId: self.userid, postId: self.postid) { (postReceived, statusCode) in
+            if let post = postReceived{
+            handler([CompletePost(post: post)],statusCode)
+            }else{
+                handler(nil,statusCode)
+            }
+        }
+    }
+}

@@ -14,6 +14,8 @@ import LinkPreviewKit
 
 class PostsRestManager:NSObject{
     let cache = NSCache<NSString, ProfileImage>()
+    let ratingCache = NSCache<NSString, Rating>()
+
     static var shared = PostsRestManager()
     private var postProvider = MoyaProvider<ApiCollection>()
     func getPosts(userId:String,pageNumber:Int,handler: @escaping ((PostList?,Int)->(Void))){
@@ -171,12 +173,20 @@ class PostsRestManager:NSObject{
     }
     
     func getUserRating(userId:String?,handler:@escaping ((Rating?,Int?)->())){
+        if let rating = ratingCache.object(forKey: "ratingCache"){
+            print("Rating From Cache")
+            handler(rating,HttpResponseCodes.success.rawValue)
+            return
+        }
         postProvider.request(.getUserRating(userId: /userId)) { (response) in
             switch response{
             case .success(let result):
                 do{
                     let responseString = try result.mapString()
                     let rating = Rating(JSONString: responseString)
+                    if let ratingReceived = rating{
+                        self.ratingCache.setObject(ratingReceived, forKey: "ratingCache")
+                    }
                     handler(rating ?? Rating(),result.statusCode)
                 }catch{
                     handler(nil,result.statusCode)
