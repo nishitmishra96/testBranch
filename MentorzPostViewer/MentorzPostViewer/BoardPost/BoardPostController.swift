@@ -34,6 +34,7 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         self.tableView?.dataSource = self
         self.tableView?.delegate = self
         self.restDataSource = profileDataSource(user: self.userID)
+        self.getPost(forPage: 0)
     }
     init(userid:String,base tableView:BaseTableView){
         self.userID = userid
@@ -49,6 +50,16 @@ class PostController: NSObject,UITableViewDataSource,UITableViewDelegate,PagingT
         self.tableView = tableView
         self.interest = interestList
         self.restDataSource = InterestDataSource(user: userid, InterestList: interestList)
+        super.init()
+        self.tableView?.dataSource = self
+        self.tableView?.delegate = self
+        self.getPost(forPage: 0)
+    }
+    init(userid:String,postid:String,base tableView:BaseTableView)
+    {
+        self.userID = userid
+        self.tableView = tableView
+        self.restDataSource = SinglePostDataSource(postId: postid)
         super.init()
         self.tableView?.dataSource = self
         self.tableView?.delegate = self

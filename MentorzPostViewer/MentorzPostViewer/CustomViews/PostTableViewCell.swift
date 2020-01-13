@@ -96,7 +96,10 @@ class PostTableViewCell: UITableViewCell {
         self.commentButton.layer.borderColor = UIColor.borderColor
         self.shareButton.layer.borderWidth = 0.5
         self.shareButton.layer.borderColor = UIColor.borderColor
-        self.userActivitiesView.layer.cornerRadius = 1
+        self.userActivitiesView.roundCorners(.bottomLeft, radius: 5)
+        self.userActivitiesView.roundCorners(.bottomRight, radius: 5)
+        self.likeButton.roundCorners(.bottomLeft, radius: 5)
+        self.shareButton.roundCorners(.bottomRight, radius: 5)
         self.mainPostImage.layer.borderWidth = 0.5
         self.mainPostImage.layer.borderColor = UIColor.borderColor
         self.postText.textColor = UIColor.postTextColor
@@ -342,11 +345,11 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func shareButtonPressed(_ sender: Any) {
         let url : NSURL?
         let caption:NSString = NSString(string: /self.completePost?.post?.content?.postText)
-        if self.completePost?.post?.content?.mediaType != "TEXT"{
-            url = NSURL(string: /self.completePost?.post?.content?.hresId)!
-        }else{
-            url = self.url as NSURL?
-        }
+//        if self.completePost?.post?.content?.mediaType != "TEXT"{
+            url = NSURL(string: URLGenerator.shared.postUrl + "\(String(describing: /completePost?.post?.postId))")!
+//        }else{
+//            url = self.url as NSURL?
+//        }
         let objectstoshare = [caption,url]
         let controller = UIActivityViewController(activityItems: objectstoshare, applicationActivities: nil)
         controller.setValue(caption, forKey: "Subject")

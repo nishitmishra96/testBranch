@@ -65,15 +65,13 @@ class InterestDataSource:RestDataSource{
     }
 }
 
-class PostDataSource:RestDataSource{
-    private var userid:String
+class SinglePostDataSource:RestDataSource{
     private var postid:String
-    init(user id:String,postId:String){
-        self.userid = id
+    init(postId:String){
         self.postid = postId
     }
     func getPost(forPage: Int, handler: @escaping (([CompletePost]?, Int) -> ())) {
-        PostsRestManager.shared.getPostByPostId(userId: self.userid, postId: self.postid) { (postReceived, statusCode) in
+        PostsRestManager.shared.getPostByPostId(userId: /MentorzPostViewer.shared.dataSource?.getUserId(), postId: self.postid) { (postReceived, statusCode) in
             if let post = postReceived{
             handler([CompletePost(post: post)],statusCode)
             }else{

@@ -35,7 +35,6 @@
 		945B183D23C448D80051A97B /* UploadProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945B183B23C448D80051A97B /* UploadProgressCell.swift */; };
 		945B183E23C448D80051A97B /* UploadProgressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945B183C23C448D80051A97B /* UploadProgressCell.xib */; };
 		945B188023C467C90051A97B /* UploadTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945B187F23C467C90051A97B /* UploadTaskManager.swift */; };
-		949BF4C023AA46EE00F4E621 /* PreviewImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949BF4BF23AA46EE00F4E621 /* PreviewImage.swift */; };
 		949BF4C223AA49FF00F4E621 /* GalleryImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949BF4C123AA49FF00F4E621 /* GalleryImagePicker.swift */; };
 		949BF4C423AA5F5C00F4E621 /* GoogleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949BF4C323AA5F5C00F4E621 /* GoogleURL.swift */; };
 		94A19205237D6C06001CB7A8 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A19203237D6C06001CB7A8 /* PostTableViewCell.swift */; };
@@ -102,7 +101,6 @@
 		945B183B23C448D80051A97B /* UploadProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadProgressCell.swift; sourceTree = "<group>"; };
 		945B183C23C448D80051A97B /* UploadProgressCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UploadProgressCell.xib; sourceTree = "<group>"; };
 		945B187F23C467C90051A97B /* UploadTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTaskManager.swift; sourceTree = "<group>"; };
-		949BF4BF23AA46EE00F4E621 /* PreviewImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewImage.swift; sourceTree = "<group>"; };
 		949BF4C123AA49FF00F4E621 /* GalleryImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImagePicker.swift; sourceTree = "<group>"; };
 		949BF4C323AA5F5C00F4E621 /* GoogleURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleURL.swift; sourceTree = "<group>"; };
 		94A19203237D6C06001CB7A8 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
@@ -229,7 +227,6 @@
 				944607322394E4E6000B86EB /* ImageViewerVC.swift */,
 				942F367C2397D6C5006B5350 /* CommentViewCell.swift */,
 				942F367D2397D6C5006B5350 /* CommentViewCell.xib */,
-				949BF4BF23AA46EE00F4E621 /* PreviewImage.swift */,
 				945B183B23C448D80051A97B /* UploadProgressCell.swift */,
 				945B183C23C448D80051A97B /* UploadProgressCell.xib */,
 			);
@@ -499,7 +496,6 @@
 				94DF4453238D3AA000A896E1 /* Protocols.swift in Sources */,
 				94DF4451238CF1B400A896E1 /* URLGenerator.swift in Sources */,
 				949BF4C423AA5F5C00F4E621 /* GoogleURL.swift in Sources */,
-				949BF4C023AA46EE00F4E621 /* PreviewImage.swift in Sources */,
 				94F643AB2393FF90005E7976 /* Prefix.swift in Sources */,
 				949BF4C223AA49FF00F4E621 /* GalleryImagePicker.swift in Sources */,
 				94DF444D238CEC8500A896E1 /* PostsRestManager.swift in Sources */,

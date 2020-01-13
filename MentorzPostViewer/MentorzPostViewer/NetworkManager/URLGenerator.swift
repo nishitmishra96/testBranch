@@ -22,4 +22,9 @@ class URLGenerator:NSObject{
         }
     }
     
+    var postUrl:String{
+        get{
+            return "https://mentorz.com/stories/"
+        }
+    }
 }

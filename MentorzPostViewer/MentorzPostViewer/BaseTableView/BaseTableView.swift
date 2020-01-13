@@ -32,6 +32,7 @@ public class BaseTableView: PagingTableView {
         self.allowsSelection = false
         self.estimatedRowHeight = UITableView.automaticDimension
         self.rowHeight = UITableView.automaticDimension
+        self.separatorStyle = .none
     }
     
     @objc func didPullToRefresh(){

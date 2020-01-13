@@ -31,6 +31,9 @@ public class BoardPostUITableView: BaseTableView {
     public func setupTableViewForBoardPostBasedOnInterestList(user id:String,interesetList:[Int]){
         self.controller = PostController(userid: id, base: self, interestList: interesetList)
     }
+    public func setupTableViewForSinglePost(userid:String,postid:String){
+        self.controller = PostController(userid: userid, postid: postid, base: self)
+    }
     func uploadPostPopup(info: [UIImagePickerController.InfoKey : Any],descriptionText:String,selectedImage:UIImage?,isVideo:Bool = false,videoFileUrl:NSURL? = nil){
         let imageURL = info[.imageURL]
         var imageName = ""

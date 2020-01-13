@@ -30,7 +30,7 @@ open class ImageViewerVC: UIViewController {
     }
     func initialSetup(){
         imageView.isUserInteractionEnabled = true
-        self.scrollView.minimumZoomScale=0.5;
+        self.scrollView.minimumZoomScale=1;
         self.scrollView.maximumZoomScale=6.0;
         self.scrollView.delegate=self
         self.imageView.image = UIImage(named: "loading_data_logo")
